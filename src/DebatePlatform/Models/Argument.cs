@@ -1,15 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace DebatePlatform.Models
 {
     [Table("Arguments")]
     public class Argument
     {
-        public Argument()
+        public List<Argument> AddChildren()
         {
-            this.Children = new HashSet<Argument>();
+            var db = new DebatePlatformContext();
+            this.Children = db.Arguments
+                .Where(a => a.ParentId == ArgumentId)
+                .ToList();
+            return Children.ToList();
         }
 
         [Key]

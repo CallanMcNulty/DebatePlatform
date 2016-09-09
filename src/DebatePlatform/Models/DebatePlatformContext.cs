@@ -10,10 +10,10 @@ namespace DebatePlatform.Models
     {
         public virtual DbSet<Argument> Arguments { get; set; }
 
-        public DebatePlatformContext(DbContextOptions<DebatePlatformContext> options)
-            : base(options)
-        {
-        }
+        //public DebatePlatformContext(DbContextOptions<DebatePlatformContext> options)
+        //    : base(options)
+        //{
+        //}
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {

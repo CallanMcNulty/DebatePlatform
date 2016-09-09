@@ -1,0 +1,13 @@
+﻿@model IEnumerable<DebatePlatform.Models.Argument>
+
+@{
+    ViewData["Title"] = "Debatrix - Arguments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Arguments</h2>
+<ul>
+    @foreach(var debate in Model)
+    {
+        <li>@debate.Text</li>
+    }
+</ul>

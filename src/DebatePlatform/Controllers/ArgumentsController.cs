@@ -48,7 +48,18 @@ namespace DebatePlatform.Controllers
             argument.IsAffirmative = bool.Parse(affirmative);
             argument.Strength = 1;
             argument.ParentId = p_id;
+            argument.UserId = 1; //For now
             db.Arguments.Add(argument);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult Vote(int id)
+        {
+            Argument argument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            argument.Strength = argument.Strength + 1;
+            db.Entry(argument).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -1,0 +1,16 @@
+﻿@model DebatePlatform.Models.User
+
+@{
+    ViewData["Title"] = "Debatrix - User Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Username</h2>
+<hr />
+<h3>@Model.Username's Arguments</h3>
+<ul>
+    @foreach (var argument in Model.Arguments)
+    {
+        <li>@argument.Text</li>
+    }
+</ul>

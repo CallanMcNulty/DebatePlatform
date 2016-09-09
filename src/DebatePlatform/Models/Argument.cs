@@ -11,14 +11,14 @@ namespace DebatePlatform.Models
         public List<Argument> AddChildren()
         {
             DebatePlatformContext db = new DebatePlatformContext();
-            this.Children = db.Arguments
+            Children = db.Arguments
                 .Where(a => a.ParentId == ArgumentId)
                 .ToList();
             return Children.ToList();
         }
         public void AddChildrenRecursive()
         {
-            this.AddChildren();
+            AddChildren();
             foreach(Argument child in Children)
             {
                 child.AddChildrenRecursive();
@@ -26,7 +26,7 @@ namespace DebatePlatform.Models
         }
         public void RemoveChildrenRecursive(DebatePlatformContext db)
         {
-            this.AddChildren();
+            AddChildren();
             foreach (Argument child in Children)
             {
                 child.RemoveChildrenRecursive(db);
@@ -36,7 +36,7 @@ namespace DebatePlatform.Models
         public void RemoveChildren()
         {
             DebatePlatformContext db = new DebatePlatformContext();
-            this.RemoveChildrenRecursive(db);
+            RemoveChildrenRecursive(db);
             db.SaveChanges();
         }
 
@@ -49,5 +49,8 @@ namespace DebatePlatform.Models
         public int ParentId { get; set; }
         public virtual Argument Parent { get; set; }
         public virtual ICollection<Argument> Children { get; set; }
+
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

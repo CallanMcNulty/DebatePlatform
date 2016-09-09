@@ -9,6 +9,8 @@ namespace DebatePlatform.Models
     public class DebatePlatformContext : DbContext
     {
         public virtual DbSet<Argument> Arguments { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+
 
         //public DebatePlatformContext(DbContextOptions<DebatePlatformContext> options)
         //    : base(options)

@@ -24,5 +24,11 @@ namespace DebatePlatform.Controllers
             }
             return View(rootArguments);
         }
+        public IActionResult Tree(int id)
+        {
+            Argument thisArgument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            thisArgument.AddChildrenRecursive();
+            return View(thisArgument);
+        }
     }
 }

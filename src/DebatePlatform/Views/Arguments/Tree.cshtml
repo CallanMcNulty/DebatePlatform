@@ -1,0 +1,15 @@
+﻿@model DebatePlatform.Models.Argument
+
+@{
+    ViewData["Title"] = "Debatrix";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Text</h2>
+
+<ul>
+    @foreach (var child in Model.Children)
+    {
+        <li>@child.Text</li>
+    }
+</ul>

@@ -16,6 +16,14 @@ namespace DebatePlatform.Models
                 .ToList();
             return Children.ToList();
         }
+        public void AddChildrenRecursive()
+        {
+            this.AddChildren();
+            foreach(Argument child in Children)
+            {
+                child.AddChildrenRecursive();
+            }
+        }
 
         [Key]
         public int ArgumentId { get; set; }

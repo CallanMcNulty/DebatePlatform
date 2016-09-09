@@ -13,7 +13,7 @@ namespace DebatePlatform.Helpers
                 htmlSoFar += "<ul>";
                 foreach (Argument child in argument.Children)
                 {
-                    htmlSoFar += "<li>" + child.Text + child.Strength.ToString() + 
+                    htmlSoFar += "<li>"+child.Text+" Base Strength: "+child.Strength.ToString()+" Total Strength: "+child.GetTotalStrength().ToString()+ 
                         "<form action='/Arguments/Vote/"+child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form></li>"+
                     "<a href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
                     "<br>"+

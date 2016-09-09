@@ -7,6 +7,7 @@
 }
 
 <h2>@Model.Text</h2>
+<h4>Score: @Model.GetTotalStrength()</h4>
 <a href="/Arguments/Create/@Model.ArgumentId">Respond</a>
 
 @CustomHelpers.DisplayChildren(Model)

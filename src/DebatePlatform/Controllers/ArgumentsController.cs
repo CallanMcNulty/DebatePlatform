@@ -51,7 +51,11 @@ namespace DebatePlatform.Controllers
             argument.UserId = 1; //For now
             db.Arguments.Add(argument);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            if(argument.ParentId == 0)
+            {
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
 
         [HttpPost]
@@ -61,7 +65,7 @@ namespace DebatePlatform.Controllers
             argument.Strength = argument.Strength + 1;
             db.Entry(argument).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
 
         public IActionResult Edit(int id)
@@ -77,7 +81,7 @@ namespace DebatePlatform.Controllers
             argument.IsAffirmative = bool.Parse(affirmative);
             db.Entry(argument).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId});
         }
         [HttpPost]
         public IActionResult Delete(int id)
@@ -86,7 +90,7 @@ namespace DebatePlatform.Controllers
             argument.RemoveChildren();
             db.Arguments.Remove(argument);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
     }
 }

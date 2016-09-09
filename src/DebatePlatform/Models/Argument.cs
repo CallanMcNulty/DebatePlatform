@@ -8,6 +8,12 @@ namespace DebatePlatform.Models
     [Table("Arguments")]
     public class Argument
     {
+        public Argument AddParent()
+        {
+            DebatePlatformContext db = new DebatePlatformContext();
+            Parent = db.Arguments.FirstOrDefault(a => a.ArgumentId == ParentId);
+            return Parent;
+        }
         public List<Argument> AddChildren()
         {
             DebatePlatformContext db = new DebatePlatformContext();
@@ -38,6 +44,52 @@ namespace DebatePlatform.Models
             DebatePlatformContext db = new DebatePlatformContext();
             RemoveChildrenRecursive(db);
             db.SaveChanges();
+        }
+
+        public int GetTotalStrength()
+        {
+            if(Children.Count == 0)
+            {
+                if(IsAffirmative)
+                {
+                    return Strength;
+                }
+                else
+                {
+                    return Strength * -1;
+                }
+            }
+            else
+            {
+                int total = Strength;
+                foreach(Argument child in Children)
+                {
+                    total += child.GetTotalStrength();
+                }
+                total = IsAffirmative ? total : total * -1;
+                if(total < 0 && IsAffirmative && ParentId != 0)
+                {
+                    return 0;
+                }
+                else if(total > 0 && !IsAffirmative && ParentId != 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return total;
+                }
+            }
+        }
+
+        public Argument GetRoot()
+        {
+            if(ParentId == 0)
+            {
+                return this;
+            }
+            Parent = Parent ?? this.AddParent();
+            return Parent.GetRoot();
         }
 
         [Key]

@@ -2,9 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using DebatePlatform.Models;
-using System;
-
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.EntityFrameworkCore;
 
 namespace DebatePlatform.Controllers
 {
@@ -23,21 +21,59 @@ namespace DebatePlatform.Controllers
             }
             return View(rootArguments);
         }
+
         public IActionResult Tree(int id)
         {
             Argument thisArgument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             thisArgument.AddChildrenRecursive();
             return View(thisArgument);
         }
+
+        public IActionResult Create(int id)
+        {
+            Argument thisArgument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            if (id == 0)
+            {
+                thisArgument = new Argument();
+                thisArgument.ArgumentId = 0;
+                thisArgument.Text = "";
+            }
+            return View(thisArgument);
+        }
         [HttpPost]
-        public IActionResult Create(string text, string affirmative, string p_id)
+        public IActionResult Create(string text, string affirmative, int p_id)
         {
             Argument argument = new Argument();
             argument.Text = text;
             argument.IsAffirmative = bool.Parse(affirmative);
             argument.Strength = 1;
-            argument.ParentId = Int32.Parse(p_id);
+            argument.ParentId = p_id;
             db.Arguments.Add(argument);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var thisArgument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            return View(thisArgument);
+        }
+        [HttpPost]
+        public IActionResult Edit(string text, string affirmative, int id)
+        {
+            Argument argument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            argument.Text = text;
+            argument.IsAffirmative = bool.Parse(affirmative);
+            db.Entry(argument).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var argument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            argument.RemoveChildren();
+            db.Arguments.Remove(argument);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

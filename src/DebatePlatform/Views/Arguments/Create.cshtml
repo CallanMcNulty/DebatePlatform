@@ -1,0 +1,26 @@
+﻿@model DebatePlatform.Models.Argument
+
+@{
+    ViewData["Title"] = "Debatrix - New Argument";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p>@Model.Text</p>
+@using (Html.BeginForm())
+{
+    @Html.Hidden("p_id", Model.ArgumentId)
+    @if (Model.ArgumentId != 0)
+    {
+        <label>Support</label>
+        @Html.RadioButton("affirmative", "True")
+        <label>Oppose</label>
+        @Html.RadioButton("affirmative", "False")
+    }
+    else 
+    {
+        @Html.Hidden("affirmative", "True")
+    }
+    <label>Your Argument</label>
+    <textarea id="text" name="text"></textarea>
+    <button type="submit">Create</button>
+}

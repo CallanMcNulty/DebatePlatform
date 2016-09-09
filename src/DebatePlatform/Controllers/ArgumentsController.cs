@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DebatePlatform.Models;
+using System;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,6 +28,18 @@ namespace DebatePlatform.Controllers
             Argument thisArgument = db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             thisArgument.AddChildrenRecursive();
             return View(thisArgument);
+        }
+        [HttpPost]
+        public IActionResult Create(string text, string affirmative, string p_id)
+        {
+            Argument argument = new Argument();
+            argument.Text = text;
+            argument.IsAffirmative = bool.Parse(affirmative);
+            argument.Strength = 1;
+            argument.ParentId = Int32.Parse(p_id);
+            db.Arguments.Add(argument);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

@@ -9,13 +9,24 @@ namespace DebatePlatform.Helpers
 {
     public class CustomHelpers
     {
-        public static HtmlString DisplayChildren(Argument argument, string htmlSoFar)
+        public static string DisplayChildrenRecursion(Argument argument)
         {
-            htmlSoFar += "<ul>";
-            foreach(Argument child in argument.Children)
+            string htmlSoFar = "";
+            if(argument.Children.Count > 0)
             {
-                
+                htmlSoFar += "<ul>";
+                foreach (Argument child in argument.Children)
+                {
+                    htmlSoFar += "<li>" + child.Text + "</li>";
+                    htmlSoFar += DisplayChildrenRecursion(child);
+                }
+                htmlSoFar += "</ul>";
             }
+            return htmlSoFar;
+        }
+        public static HtmlString DisplayChildren(Argument argument)
+        {
+            return new HtmlString(DisplayChildrenRecursion(argument));
         }
     }
 }

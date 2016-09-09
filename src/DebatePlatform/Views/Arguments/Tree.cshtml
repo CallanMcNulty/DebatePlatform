@@ -1,4 +1,5 @@
-﻿@model DebatePlatform.Models.Argument
+﻿@using DebatePlatform.Helpers
+@model DebatePlatform.Models.Argument
 
 @{
     ViewData["Title"] = "Debatrix";
@@ -7,9 +8,4 @@
 
 <h2>@Model.Text</h2>
 
-<ul>
-    @foreach (var child in Model.Children)
-    {
-        <li>@child.Text</li>
-    }
-</ul>
+@CustomHelpers.DisplayChildren(Model)

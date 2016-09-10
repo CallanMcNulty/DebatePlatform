@@ -8,7 +8,7 @@ using DebatePlatform.Models;
 namespace DebatePlatform.Migrations
 {
     [DbContext(typeof(DebatePlatformContext))]
-    [Migration("20160909155409_Initial")]
+    [Migration("20160910000457_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,19 +30,38 @@ namespace DebatePlatform.Migrations
 
                     b.Property<string>("Text");
 
+                    b.Property<int>("UserId");
+
                     b.HasKey("ArgumentId");
 
                     b.HasIndex("ParentId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Arguments");
+                });
+
+            modelBuilder.Entity("DebatePlatform.Models.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Username");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DebatePlatform.Models.Argument", b =>
                 {
                     b.HasOne("DebatePlatform.Models.Argument", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParentId");
+
+                    b.HasOne("DebatePlatform.Models.User", "User")
+                        .WithMany("Arguments")
+                        .HasForeignKey("UserId");
                 });
         }
     }

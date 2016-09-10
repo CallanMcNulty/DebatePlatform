@@ -13,6 +13,15 @@ namespace DebatePlatform.Controllers
             User thisUser = db.Users
                 .Include(u => u.Arguments)
                 .FirstOrDefault(u => u.UserId == id);
+            //temporary
+            if(thisUser == null)
+            {
+                thisUser = new User();
+                thisUser.Username = "Callan";
+                db.Users.Add(thisUser);
+                db.SaveChanges();
+            }
+            //end-temporary
             return View(thisUser);
         }
     }

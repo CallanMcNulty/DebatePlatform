@@ -38,12 +38,6 @@ namespace DebatePlatform.Migrations
                 {
                     table.PrimaryKey("PK_Arguments", x => x.ArgumentId);
                     table.ForeignKey(
-                        name: "FK_Arguments_Arguments_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "Arguments",
-                        principalColumn: "ArgumentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Arguments_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",

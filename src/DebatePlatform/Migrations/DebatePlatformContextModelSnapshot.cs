@@ -54,9 +54,6 @@ namespace DebatePlatform.Migrations
 
             modelBuilder.Entity("DebatePlatform.Models.Argument", b =>
                 {
-                    b.HasOne("DebatePlatform.Models.Argument", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId");
 
                     b.HasOne("DebatePlatform.Models.User", "User")
                         .WithMany("Arguments")

@@ -1,2 +1,12 @@
-﻿body {
+﻿.aff {
+    border: 3px solid green;
+    background-color: lightgreen;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.neg {
+    border: 3px solid red;
+    background-color: lightcoral;
+    padding: 5px;
+    margin-bottom: 5px;
 }

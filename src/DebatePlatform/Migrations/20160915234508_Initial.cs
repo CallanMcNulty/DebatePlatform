@@ -72,21 +72,14 @@ namespace DebatePlatform.Migrations
                     ParentId = table.Column<int>(nullable: false),
                     Strength = table.Column<int>(nullable: false),
                     Text = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
-                    UserId1 = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Arguments", x => x.ArgumentId);
                     table.ForeignKey(
-                        name: "FK_Arguments_Arguments_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "Arguments",
-                        principalColumn: "ArgumentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Arguments_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Arguments_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -195,9 +188,9 @@ namespace DebatePlatform.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Arguments_UserId1",
+                name: "IX_Arguments_UserId",
                 table: "Arguments",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",

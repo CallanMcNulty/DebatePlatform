@@ -78,15 +78,13 @@ namespace DebatePlatform.Migrations
 
                     b.Property<string>("Text");
 
-                    b.Property<int>("UserId");
-
-                    b.Property<string>("UserId1");
+                    b.Property<string>("UserId");
 
                     b.HasKey("ArgumentId");
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Arguments");
                 });
@@ -206,7 +204,7 @@ namespace DebatePlatform.Migrations
 
                     b.HasOne("DebatePlatform.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

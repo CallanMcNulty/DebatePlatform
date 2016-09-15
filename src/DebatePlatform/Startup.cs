@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using DebatePlatform.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DebatePlatform
 {
@@ -25,11 +26,14 @@ namespace DebatePlatform
             services.AddEntityFramework()
                 .AddDbContext<DebatePlatformContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<DebatePlatformContext>()
+                .AddDefaultTokenProviders();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
+            app.UseIdentity();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

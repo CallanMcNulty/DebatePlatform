@@ -8,9 +8,10 @@ using DebatePlatform.Models;
 namespace DebatePlatform.Migrations
 {
     [DbContext(typeof(DebatePlatformContext))]
-    partial class DebatePlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20160915223835_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")

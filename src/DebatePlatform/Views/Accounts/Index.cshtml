@@ -1,0 +1,24 @@
+﻿@model DebatePlatform.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Debatrix - User Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.LoggedIn)
+{
+    <h2>@Model.UserName</h2>
+    <hr />
+    <h3>@Model.UserName's Arguments</h3>
+    <ul>
+        @foreach (var argument in ViewBag.UserArguments)
+        {
+            <li>@argument.Text</li>
+        }
+    </ul>
+}
+else
+{
+    <p>@Html.ActionLink("Register", "Register")</p>
+    <p>@Html.ActionLink("Log In", "Login")</p>
+}

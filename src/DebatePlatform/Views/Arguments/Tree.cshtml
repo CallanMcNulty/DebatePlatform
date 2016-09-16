@@ -2,15 +2,16 @@
 @model DebatePlatform.Models.Argument
 
 @{
-    ViewData["Title"] = "Debatrix - Model.Text";
+    ViewData["Title"] = "Debatrix - "+Model.Text;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>@Model.Text</h2>
-<h4>Score: @Model.GetTotalStrength()</h4>
-<a href="/Arguments/Create/@Model.ArgumentId">Respond</a>
+<a href="/Arguments">Back</a>
+<hr />
+<div class="argument">
+    <h2>@Model.Text</h2>
+    <h4>Score: @Model.GetTotalStrength()</h4>
+    <a href="/Arguments/Create/@Model.ArgumentId">Respond</a>
+</div>
 
 @CustomHelpers.DisplayChildren(Model)
 
-<hr />
-<a href="/Arguments">Back</a>

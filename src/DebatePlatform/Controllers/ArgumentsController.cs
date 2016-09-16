@@ -43,6 +43,7 @@ namespace DebatePlatform.Controllers
         {
             Argument thisArgument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             thisArgument.AddChildrenRecursive();
+            thisArgument.AddParent();
             return View(thisArgument);
         }
 

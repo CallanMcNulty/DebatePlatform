@@ -20,6 +20,10 @@ namespace DebatePlatform.Models
             Children = db.Arguments
                 .Where(a => a.ParentId == ArgumentId)
                 .ToList();
+            foreach(Argument child in Children)
+            {
+                child.AddParent();
+            }
             return Children.ToList();
         }
         public void AddChildrenRecursive()

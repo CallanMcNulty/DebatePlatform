@@ -115,6 +115,30 @@ namespace DebatePlatform.Tests
             //Assert
             Assert.Equal(1, result);
         }
+        [Fact]
+        public void GetMinWidthTest()
+        {
+            //Arrange
+            Argument arg1 = new Argument();
+            arg1.ArgumentId = 1;
+            Argument arg2 = new Argument();
+            arg2.ArgumentId = 2;
+            Argument arg3 = new Argument();
+            arg3.ArgumentId = 3;
+            Argument arg4 = new Argument();
+            arg4.ArgumentId = 4;
+            arg2.Parent = arg1;
+            arg4.Parent = arg1;
+            arg4.Children = new List<Argument>();
+            arg1.Children = new List<Argument>() { arg2, arg4 };
+            arg3.Parent = arg2;
+            arg2.Children = new List<Argument>() { arg3 };
+            arg3.Children = new List<Argument>();
+            //Act
+            float result = arg1.GetMinWidth(100F);
+            //Assert
+            Assert.Equal(50F, result);
+        }
     }
 }
 

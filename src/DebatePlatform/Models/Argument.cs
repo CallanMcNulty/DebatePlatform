@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -94,6 +95,16 @@ namespace DebatePlatform.Models
             }
             Parent = Parent ?? this.AddParent();
             return Parent.GetRoot();
+        }
+        
+        public float GetMinWidth(float width)
+        {
+            float childWidth = width / (float)Children.Count;
+            foreach (Argument child in Children)
+            {
+                width = Math.Min(child.GetMinWidth(childWidth), width);
+            }
+            return width;
         }
 
         [Key]

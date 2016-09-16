@@ -1,5 +1,6 @@
 ﻿using DebatePlatform.Models;
 using Microsoft.AspNetCore.Html;
+using System;
 
 namespace DebatePlatform.Helpers
 {
@@ -36,6 +37,11 @@ namespace DebatePlatform.Helpers
         public static HtmlString DisplayChildren(Argument argument)
         {
             return new HtmlString(DisplayChildrenRecursion(argument));
+        }
+        public static HtmlString BeginTreeContainer(Argument argument)
+        {
+            int totalWidth = (int)(200F / argument.GetMinWidth(1F));
+            return new HtmlString("<div style='min-width:"+totalWidth.ToString()+"px'>");
         }
     }
 }

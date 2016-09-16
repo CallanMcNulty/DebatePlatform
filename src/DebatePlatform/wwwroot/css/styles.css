@@ -7,7 +7,6 @@
     float:left;
 }
 .connector-container {
-    max-width: 80%; 
     display:block; 
     margin:auto;
 }
@@ -16,10 +15,13 @@
     width:50%; 
     height:30px;
 }
+.argument-container {
+    padding-left: 7px;
+    padding-right: 7px;
+}
 .argument {
     padding:10px; 
-    border-radius:20px; 
-    max-width: 80%; 
+    border-radius:20px;
     display:block; 
     margin:auto; 
     border:2px solid

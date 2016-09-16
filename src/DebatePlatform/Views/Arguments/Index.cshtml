@@ -11,4 +11,7 @@
         <li>@Html.ActionLink(debate.Text, "Tree", new { id = debate.ArgumentId })</li>
     }
 </ul>
-<a href="/Arguments/Create/0">Add your own</a>
+@if (User.IsInRole("user"))
+{
+    <a href="/Arguments/Create/0">Add your own</a>
+}

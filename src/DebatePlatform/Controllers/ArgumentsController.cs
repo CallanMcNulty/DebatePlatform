@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DebatePlatform.Controllers
 {
@@ -21,7 +22,7 @@ namespace DebatePlatform.Controllers
             _signInManager = signInManager;
             _db = db;
         }
-        public async Task<ApplicationUser> GetCurrentUser()
+        private async Task<ApplicationUser> GetCurrentUser()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await _userManager.FindByIdAsync(userId);
@@ -44,9 +45,18 @@ namespace DebatePlatform.Controllers
             Argument thisArgument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             thisArgument.AddChildrenRecursive();
             thisArgument.AddParent();
+            ViewBag.UserType = 0;
+            if (User.IsInRole("user"))
+            {
+                ViewBag.UserType = 1;
+            }
+            else if (User.IsInRole("admin"))
+            {
+                ViewBag.UserType = 2;
+            }
             return View(thisArgument);
         }
-
+        [Authorize]
         public IActionResult Create(int id)
         {
             Argument thisArgument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
@@ -59,6 +69,7 @@ namespace DebatePlatform.Controllers
             return View(thisArgument);
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(string text, string affirmative, int p_id)
         {
             Argument argument = new Argument();
@@ -78,6 +89,7 @@ namespace DebatePlatform.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Vote(int id)
         {
             ApplicationUser current = await GetCurrentUser();
@@ -100,13 +112,14 @@ namespace DebatePlatform.Controllers
             _db.SaveChanges();
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
-
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(int id)
         {
             var thisArgument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             return View(thisArgument);
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(string text, string affirmative, int id)
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
@@ -117,6 +130,7 @@ namespace DebatePlatform.Controllers
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId});
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             var argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);

@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Linq;
 using DebatePlatform.ViewModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BasicAuthentication.Controllers
 {
@@ -20,7 +22,7 @@ namespace BasicAuthentication.Controllers
             _signInManager = signInManager;
             _db = db;
         }
-        public async Task<ApplicationUser> GetCurrentUser()
+        private async Task<ApplicationUser> GetCurrentUser()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await _userManager.FindByIdAsync(userId);
@@ -54,6 +56,12 @@ namespace BasicAuthentication.Controllers
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
+                IdentityUserRole<string> userrole = new IdentityUserRole<string>();
+                var role = _db.Roles.FirstOrDefault(r => r.Name == "user");
+                userrole.RoleId = role.Id;
+                userrole.UserId = user.Id;
+                _db.UserRoles.Add(userrole);
+                _db.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
@@ -82,6 +90,7 @@ namespace BasicAuthentication.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();

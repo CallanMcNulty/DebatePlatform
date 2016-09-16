@@ -8,6 +8,10 @@
 @if (ViewBag.LoggedIn)
 {
     <h2>@Model.UserName</h2>
+    @using (Html.BeginForm("LogOff", "Accounts"))
+    {
+        <input type="submit" class="btn btn-default" value="Log out" />
+    }
     <hr />
     <h3>@Model.UserName's Arguments</h3>
     <ul>

@@ -6,7 +6,7 @@ namespace DebatePlatform.Helpers
 {
     public class CustomHelpers
     {
-        public static string DisplayChildrenRecursion(Argument argument)
+        public static string DisplayChildrenRecursion(Argument argument, int userType)
         {
             string htmlSoFar = "";
             if(argument.Children.Count > 0)
@@ -20,24 +20,31 @@ namespace DebatePlatform.Helpers
                         "<div class='connector-container'>" +
                             "<div class='connector'></div>"+
                         "</div>"+
-                        "<div class='argument "+(child.IsAffirmative ? "aff" : "neg")+"'>"+
-                            child.Text+" Base Strength: "+child.Strength.ToString()+" Total Strength: "+child.GetTotalStrength().ToString()+
-                            "<form action='/Arguments/Vote/"+child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form>"+
-                            "<a href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
-                            "<br>"+
-                            "<a href='/Arguments/Edit/" + child.ArgumentId.ToString() + "'>Edit</a>"+
+                        "<div class='argument-container'>"+
+                            "<div class='argument "+(child.IsAffirmative ? "aff" : "neg")+"'>"+
+                                child.Text+" Base Strength: "+child.Strength.ToString()+" Total Strength: "+child.GetTotalStrength().ToString()+
+                                (userType==0 ? "" :
+                                    "<form action='/Arguments/Vote/"+child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form>"+
+                                    "<a href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
+                                    "<br>"+
+                                    (userType==1 ? "" :
+                                        "<a href='/Arguments/Edit/" + child.ArgumentId.ToString() + "'>Edit</a>"
+                                    )
+                                )+
+                            "</div>"+
                         "</div>"+
-                        DisplayChildrenRecursion(child)+
+                        DisplayChildrenRecursion(child, userType)+
                     "</div>";
                 }
                 htmlSoFar += "</div>";
             }
             return htmlSoFar;
         }
-        public static HtmlString DisplayChildren(Argument argument)
+        public static HtmlString DisplayChildren(Argument argument, int userType)
         {
-            return new HtmlString(DisplayChildrenRecursion(argument));
+            return new HtmlString(DisplayChildrenRecursion(argument, userType));
         }
+
         public static HtmlString BeginTreeContainer(Argument argument)
         {
             int totalWidth = (int)(200F / argument.GetMinWidth(1F));

@@ -8,6 +8,7 @@ namespace DebatePlatform.Models
     public class DebatePlatformContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<Argument> Arguments { get; set; }
+        public virtual DbSet<Vote> Votes { get; set; }
 
         protected override void OnModelCreating( ModelBuilder modelbuilder)
         {

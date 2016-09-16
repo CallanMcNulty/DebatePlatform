@@ -77,10 +77,24 @@ namespace DebatePlatform.Controllers
         }
 
         [HttpPost]
-        public IActionResult Vote(int id)
+        public async Task<IActionResult> Vote(int id)
         {
+            ApplicationUser current = await GetCurrentUser();
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
-            argument.Strength = argument.Strength + 1;
+            Vote existingVote = _db.Votes.FirstOrDefault(v => v.UserId==current.Id && v.ArgumentId==argument.ArgumentId);
+            if (existingVote==null)
+            {
+                argument.Strength = argument.Strength + 1;
+                Vote vote = new Vote();
+                vote.ArgumentId = argument.ArgumentId;
+                vote.UserId = current.Id;
+                _db.Votes.Add(vote);
+            }
+            else
+            {
+                argument.Strength = argument.Strength - 1;
+                _db.Votes.Remove(existingVote);
+            }
             _db.Entry(argument).State = EntityState.Modified;
             _db.SaveChanges();
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });

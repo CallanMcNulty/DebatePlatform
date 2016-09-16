@@ -9,9 +9,9 @@
 <hr />
 @CustomHelpers.BeginTreeContainer(Model)
     <div class="argument">
-        <h2>@Model.Text</h2>
         <h4>Score: @Model.GetTotalStrength()</h4>
-        <a href="/Arguments/Create/@Model.ArgumentId">Respond</a>
+        <h2 class="arg-text">@Model.Text</h2>
+        <a class="float-left" href="/Arguments/Create/@Model.ArgumentId">Respond</a>
     </div>
 
     @CustomHelpers.DisplayChildren(Model, ViewBag.UserType)

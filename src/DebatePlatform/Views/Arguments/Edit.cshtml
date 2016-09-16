@@ -24,8 +24,11 @@
     <textarea id="text" name="text">@Model.Text</textarea>
     <button type="submit">Edit</button>
 }
-@using (Html.BeginForm("Delete", "Arguments", FormMethod.Post))
+@if (ViewBag.CanDelete)
 {
-    @Html.Hidden("id", Model.ArgumentId)
-    <button type="submit">Delete</button>
+    @using (Html.BeginForm("Delete", "Arguments", FormMethod.Post))
+    {
+        @Html.Hidden("id", Model.ArgumentId)
+        <button type="submit">Delete</button>
+    }
 }

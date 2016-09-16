@@ -115,8 +115,14 @@ namespace DebatePlatform.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Edit(int id)
         {
-            var thisArgument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
-            return View(thisArgument);
+            var argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            argument.AddChildren();
+            ViewBag.CanDelete = false;
+            if (argument.Children.Count == 0)
+            {
+                ViewBag.CanDelete = true;
+            }
+            return View(argument);
         }
         [HttpPost]
         [Authorize(Roles = "admin")]
@@ -134,9 +140,12 @@ namespace DebatePlatform.Controllers
         public IActionResult Delete(int id)
         {
             var argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
-            argument.RemoveChildren();
-            _db.Arguments.Remove(argument);
-            _db.SaveChanges();
+            argument.AddChildren();
+            if (argument.Children.Count == 0)
+            {
+                _db.Arguments.Remove(argument);
+                _db.SaveChanges();
+            }
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
     }

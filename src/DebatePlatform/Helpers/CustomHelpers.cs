@@ -22,13 +22,12 @@ namespace DebatePlatform.Helpers
                         "</div>"+
                         "<div class='argument-container'>"+
                             "<div class='argument "+(child.IsAffirmative ? "aff" : "neg")+"'>"+
-                                child.Text+" Base Strength: "+child.Strength.ToString()+" Total Strength: "+child.GetTotalStrength().ToString()+
-                                (userType==0 ? "" :
-                                    "<form action='/Arguments/Vote/"+child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form>"+
-                                    "<a href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
-                                    "<br>"+
+                                "<p>"+child.GetTotalStrength().ToString()+"</p><form class='float-right' action='/Arguments/Vote/" + child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form>"+
+                                "<div class='arg-text'>"+child.Text+"</div>"+
+                                (userType==0 ? "" : 
+                                    "<a class='float-left' href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
                                     (userType==1 ? "" :
-                                        "<a href='/Arguments/Edit/" + child.ArgumentId.ToString() + "'>Edit</a>"
+                                        "<a class='float-right' href='/Arguments/Edit/" + child.ArgumentId.ToString() + "'>Edit</a>"
                                     )
                                 )+
                             "</div>"+

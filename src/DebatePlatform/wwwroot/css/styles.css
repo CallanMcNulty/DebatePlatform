@@ -1,6 +1,17 @@
-﻿.outer-container {
+﻿body {
+    background-color: lightyellow;
+}
+.outer-container {
     width:100%; 
     float:left;
+}
+.outer-container:hover, .argument:hover {
+    cursor: grab;
+    cursor: -webkit-grab;
+}
+.outer-container:active, .argument:active {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
 }
 .inner-container {
     min-height:100px; 
@@ -11,7 +22,7 @@
     margin:auto;
 }
 .connector {
-    border-right:2px solid blue; 
+    border-right:2px solid black; 
     width:50%; 
     height:30px;
 }
@@ -20,17 +31,71 @@
     padding-right: 7px;
 }
 .argument {
+    background-color: white;
     padding:10px; 
+    padding-bottom: 35px;
     border-radius:20px;
     display:block; 
     margin:auto; 
-    border:2px solid
+    border:2px solid;
+    box-shadow: inset 0 0 10px gray;
+}
+.float-right {
+    float: right;
 }
 .aff {
     background-color: lightgreen;
     border-color: darkgreen;
+    box-shadow: inset 0 0 10px darkgreen;
 }
 .neg {
     background-color: lightcoral;
     border-color: darkred;
+    box-shadow: inset 0 0 10px darkred;
+}
+.aff .arg-text {
+    background-color: #d2ffca;
+}
+.neg .arg-text {
+    background-color: #ffd2ca;
+}
+.argument .arg-text {
+    margin: 0px;
+    margin-bottom: 10px;
+    margin-top: 35px;
+    padding: 8px;
+}
+.float-left {
+    float: left;
+}
+.argument p, .argument h4 {
+    float: left;
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 1px solid;
+    border-radius: 20px;
+}
+.argument a,.argument button {
+    background-color: none;
+    border: 1px inset;
+    text-decoration: none;
+    color: black;
+    border-radius: 20px;
+    padding: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: lightgray;
+}
+.aff a, .aff button {
+    box-shadow: 0px 0px 8px darkgreen;
+}
+.neg a, .neg button {
+    box-shadow: 0px 0px 8px darkred;
+}
+.argument a:hover, .argument button:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
 }

@@ -1,23 +1,32 @@
 ﻿@using DebatePlatform.Helpers
 @model DebatePlatform.Models.Argument
 
-@{
-    ViewData["Title"] = "Debatrix - "+Model.Text;
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-<a href="/Arguments">Back</a>
-<hr />
-@CustomHelpers.BeginTreeContainer(Model)
-    <div class="argument">
-        <h4>Score: @Model.GetTotalStrength()</h4>
-        <h2 class="arg-text">@Model.Text</h2>
-        <a class="float-left" href="/Arguments/Create/@Model.ArgumentId">Respond</a>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Debatrix - @Model.Text</title>
+    <link rel="stylesheet" href="~/css/styles.css" />
+</head>
+<body>
+    <div>
+        <br />
+        <a href="/Arguments"><strong>&#8678; Back</strong></a>
+        <br />
+        <br />
+
+        @CustomHelpers.BeginTreeContainer(Model)
+            <div class="argument">
+                <h4>Score: @Model.GetTotalStrength()</h4>
+                <h2 class="arg-text">@Model.Text</h2>
+                <a class="float-left" href="/Arguments/Create/@Model.ArgumentId">Respond</a>
+            </div>
+
+            @CustomHelpers.DisplayChildren(Model, ViewBag.UserType)
+        </div>
     </div>
-
-    @CustomHelpers.DisplayChildren(Model, ViewBag.UserType)
-</div>
-
-<script type="text/javascript">
+    <script type="text/javascript">
     var curYPos = 0,
     curXPos = 0,
     curDown = false;
@@ -30,4 +39,6 @@
 
     window.addEventListener('mousedown', function (e) { curDown = true; curYPos = e.pageY; curXPos = e.pageX; });
     window.addEventListener('mouseup', function (e) { curDown = false; });
-</script>
+    </script>
+</body>
+</html>

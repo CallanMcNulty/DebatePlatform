@@ -6,21 +6,27 @@
 }
 
 <p>@Model.Text</p>
-@using (Html.BeginForm())
-{
-    @Html.Hidden("p_id", Model.ArgumentId)
-    @if (Model.ArgumentId != 0)
+<hr />
+<div class="white-page">
+    @using (Html.BeginForm())
     {
-        <label>Support</label>
-        @Html.RadioButton("affirmative", "True")
-        <label>Oppose</label>
-        @Html.RadioButton("affirmative", "False")
+        @Html.Hidden("p_id", Model.ArgumentId)
+        @if (Model.ArgumentId != 0)
+        {
+            <label>Support</label>
+            <input name="affirmative" type="radio" value="True" checked="checked">
+            <label>&nbsp;&nbsp; Oppose</label>
+            <input name="affirmative" type="radio" value="False">
+            <br />
+            <br />
+        }
+        else
+        {
+            @Html.Hidden("affirmative", "True")
+        }
+        <label>Your Argument</label><br />
+        <textarea id="text" name="text" maxlength="255"></textarea>
+        <br />
+        <button type="submit">Create</button>
     }
-    else 
-    {
-        @Html.Hidden("affirmative", "True")
-    }
-    <label>Your Argument</label>
-    <textarea id="text" name="text"></textarea>
-    <button type="submit">Create</button>
-}
+</div>

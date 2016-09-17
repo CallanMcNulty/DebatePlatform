@@ -4,14 +4,16 @@
     ViewData["Title"] = "Debatrix - Arguments";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Arguments</h2>
-<ul>
-    @foreach(var debate in Model)
+<div id="argument-list" class="white-page">
+    <h2>Recent Arguments</h2>
+    <ul>
+        @foreach(var debate in Model)
+        {
+            <li>@Html.ActionLink(debate.Text, "Tree", new { id = debate.ArgumentId })</li>
+        }
+    </ul>
+    @if (User.IsInRole("user") || User.IsInRole("admin"))
     {
-        <li>@Html.ActionLink(debate.Text, "Tree", new { id = debate.ArgumentId })</li>
+        <a href="/Arguments/Create/0">+ Add your own</a>
     }
-</ul>
-@if (User.IsInRole("user") || User.IsInRole("admin"))
-{
-    <a href="/Arguments/Create/0">Add your own</a>
-}
+</div>

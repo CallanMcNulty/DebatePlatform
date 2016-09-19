@@ -30,6 +30,7 @@ namespace DebatePlatform.Helpers
                                         "<a class='float-right' href='/Arguments/Edit/" + child.ArgumentId.ToString() + "'>Edit</a>"
                                     )
                                 )+
+                                "<a class='float-right' href='/Arguments/Details/"+child.ArgumentId.ToString()+"'>View</a>"+
                             "</div>"+
                         "</div>"+
                         DisplayChildrenRecursion(child, userType)+

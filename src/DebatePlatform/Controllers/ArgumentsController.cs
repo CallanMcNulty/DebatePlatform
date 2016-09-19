@@ -125,7 +125,7 @@ namespace DebatePlatform.Controllers
             return View(argument);
         }
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public IActionResult Edit(string text, string affirmative, int id)
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
@@ -147,6 +147,78 @@ namespace DebatePlatform.Controllers
                 _db.SaveChanges();
             }
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
+        }
+        public IActionResult Details(int id)
+        {
+            Argument argument = _db.Arguments
+                .Include(a => a.ProposedEdits)
+                .FirstOrDefault(a => a.ArgumentId == id);
+            return View(argument);
+        }
+        
+        public IActionResult ProposeEdit(int id)
+        {
+            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            return View(argument);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProposeEdit(string text, string affirmative, string reason, int id, string delete)
+        {
+            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            ProposedEdit edit = new ProposedEdit();
+            edit.Text = text == "" ? null : text;
+            edit.IsAffirmative = affirmative == "" ? argument.IsAffirmative : bool.Parse(affirmative);
+            edit.Reason = reason;
+            edit.IsDelete = delete == "True" ? true : false;
+            edit.ArgumentId = id;
+            ApplicationUser current = await GetCurrentUser();
+            edit.UserId = current.Id;
+            edit.Votes = 1;
+            edit.ParentId = argument.ParentId; //for now
+            _db.ProposedEdits.Add(edit);
+            _db.SaveChanges();
+            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CastEditVote(int id)
+        {
+            ProposedEdit edit = _db.ProposedEdits.FirstOrDefault(pe => pe.Id == id);
+
+            ApplicationUser current = await GetCurrentUser();
+            EditVote existingVote = _db.EditVotes.FirstOrDefault(ev => ev.UserId == current.Id && ev.ProposedEditId == id);
+            if (existingVote == null)
+            {
+                edit.Votes += 1;
+                EditVote vote = new EditVote();
+                vote.ProposedEditId = edit.Id;
+                vote.UserId = current.Id;
+                _db.EditVotes.Add(vote);
+                if (edit.Votes >= 5)
+                {
+                    _db.ProposedEdits.Remove(edit);
+                    _db.SaveChanges();
+                    if (edit.IsDelete)
+                    {
+                        return RedirectToAction("Edit", new { edit.Text, edit.IsAffirmative, edit.ArgumentId });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Delete");
+                    }
+
+                }
+            }
+            else
+            {
+                edit.Votes -= 1;
+                _db.EditVotes.Remove(existingVote);
+            }
+                        
+            _db.Entry(edit).State = EntityState.Modified;
+            _db.SaveChanges();
+            return RedirectToAction("Details", new { id = edit.ArgumentId });
         }
     }
 }

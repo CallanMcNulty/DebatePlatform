@@ -1,0 +1,19 @@
+﻿@model DebatePlatform.Models.Argument
+
+@{
+    ViewData["Title"] = Model.Text;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Text</h2>
+<h4>@Model.Strength</h4>
+<hr />
+
+<h4>Proposed Edits: @Html.ActionLink("+ Propose your own", "ProposeEdit", "Arguments", new { id = Model.ArgumentId})</h4>
+<ol>
+    @foreach (var edit in Model.ProposedEdits)
+    {
+        <li>@edit.Reason Votes: @edit.Votes </li>
+        @using (Html.BeginForm("CastEditVote", "Arguments", new { id = edit.Id })) { <button type="submit">I Agree</button> } 
+    }
+</ol>

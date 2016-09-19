@@ -9,6 +9,8 @@ namespace DebatePlatform.Models
     {
         public virtual DbSet<Argument> Arguments { get; set; }
         public virtual DbSet<Vote> Votes { get; set; }
+        public virtual DbSet<ProposedEdit> ProposedEdits { get; set; }
+        public virtual DbSet<EditVote> EditVotes { get; set; }
 
         protected override void OnModelCreating( ModelBuilder modelbuilder)
         {

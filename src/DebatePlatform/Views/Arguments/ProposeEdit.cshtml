@@ -1,0 +1,38 @@
+﻿@model DebatePlatform.Models.Argument
+
+@{
+    ViewData["Title"] = "Debatrix - Edit Argument";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="white-page">
+    @using (Html.BeginForm())
+    {
+        @Html.Hidden("id", Model.ArgumentId)
+        @if (Model.ParentId != 0)
+        {
+            <label>Delete this Argument?</label>
+            <input name="delete" type="checkbox" value="True">
+            <br />
+            <br />
+            <label>Support</label>
+            <input name="affirmative" type="radio" value="True">
+            <label>&nbsp;&nbsp; Oppose</label>
+                <input name="affirmative" type="radio" value="False">
+                <br />
+                <br />
+        }
+        else
+        {
+            @Html.Hidden("affirmative", "True")
+        }
+        <label>Your Argument</label><br />
+        <textarea id="text" name="text" maxlength="255">@Model.Text</textarea>
+        <br />
+        <br />
+        <label>Why are you proposing this edit?</label><br />
+        <textarea id="reason" name="reason" maxlength="255"></textarea>
+        <br />
+        <button type="submit">Save</button>
+    }
+</div>

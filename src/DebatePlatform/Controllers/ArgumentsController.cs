@@ -139,10 +139,16 @@ namespace DebatePlatform.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
-            var argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            var argument = _db.Arguments
+                .Include(a => a.Votes)
+                .FirstOrDefault(a => a.ArgumentId == id);
             argument.AddChildren();
             if (argument.Children.Count == 0)
             {
+                foreach(Vote vote in argument.Votes)
+                {
+                    _db.Votes.Remove(vote);
+                }
                 _db.Arguments.Remove(argument);
                 _db.SaveChanges();
             }

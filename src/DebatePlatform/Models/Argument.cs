@@ -120,6 +120,7 @@ namespace DebatePlatform.Models
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
+        public virtual ICollection<Vote> Votes { get; set; }
         public virtual ICollection<ProposedEdit> ProposedEdits { get; set; }
     }
 }

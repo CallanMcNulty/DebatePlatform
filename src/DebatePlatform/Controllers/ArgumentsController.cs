@@ -27,6 +27,32 @@ namespace DebatePlatform.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await _userManager.FindByIdAsync(userId);
         }
+        private Argument PerformEdit(string text, bool affirmative, int id)
+        {
+            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            argument.Text = text;
+            argument.IsAffirmative = affirmative;
+            _db.Entry(argument).State = EntityState.Modified;
+            _db.SaveChanges();
+            return argument;
+        }
+        private Argument PerformDelete(int id)
+        {
+            var argument = _db.Arguments
+                .Include(a => a.Votes)
+                .FirstOrDefault(a => a.ArgumentId == id);
+            argument.AddChildren();
+            if (argument.Children.Count == 0)
+            {
+                foreach (Vote vote in argument.Votes)
+                {
+                    _db.Votes.Remove(vote);
+                }
+                _db.Arguments.Remove(argument);
+                _db.SaveChanges();
+            }
+            return argument;
+        }
         public IActionResult Index()
         {
             List<Argument> rootArguments = new List<Argument>();
@@ -125,33 +151,17 @@ namespace DebatePlatform.Controllers
             return View(argument);
         }
         [HttpPost]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(string text, string affirmative, int id)
         {
-            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
-            argument.Text = text;
-            argument.IsAffirmative = bool.Parse(affirmative);
-            _db.Entry(argument).State = EntityState.Modified;
-            _db.SaveChanges();
+            Argument argument = PerformEdit(text, bool.Parse(affirmative), id);
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId});
         }
         [HttpPost]
         [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
-            var argument = _db.Arguments
-                .Include(a => a.Votes)
-                .FirstOrDefault(a => a.ArgumentId == id);
-            argument.AddChildren();
-            if (argument.Children.Count == 0)
-            {
-                foreach(Vote vote in argument.Votes)
-                {
-                    _db.Votes.Remove(vote);
-                }
-                _db.Arguments.Remove(argument);
-                _db.SaveChanges();
-            }
+            Argument argument = PerformDelete(id);
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
         public IActionResult Details(int id)
@@ -174,7 +184,7 @@ namespace DebatePlatform.Controllers
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             ProposedEdit edit = new ProposedEdit();
             edit.Text = text == "" ? null : text;
-            edit.IsAffirmative = affirmative == "" ? argument.IsAffirmative : bool.Parse(affirmative);
+            edit.IsAffirmative = affirmative == null ? argument.IsAffirmative : bool.Parse(affirmative);
             edit.Reason = reason;
             edit.IsDelete = delete == "True" ? true : false;
             edit.ArgumentId = id;
@@ -184,7 +194,7 @@ namespace DebatePlatform.Controllers
             edit.ParentId = argument.ParentId; //for now
             _db.ProposedEdits.Add(edit);
             _db.SaveChanges();
-            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
+            return RedirectToAction("Details", new { id = edit.ArgumentId });
         }
 
         [HttpPost]
@@ -197,21 +207,29 @@ namespace DebatePlatform.Controllers
             if (existingVote == null)
             {
                 edit.Votes += 1;
+                _db.Entry(edit).State = EntityState.Modified;
                 EditVote vote = new EditVote();
                 vote.ProposedEditId = edit.Id;
                 vote.UserId = current.Id;
                 _db.EditVotes.Add(vote);
+                _db.SaveChanges();
                 if (edit.Votes >= 5)
                 {
+                    List<EditVote> votes = _db.EditVotes.Where(ev => ev.ProposedEditId == edit.Id).ToList();
+                    foreach(EditVote v in votes)
+                    {
+                        _db.EditVotes.Remove(v);
+                    }
                     _db.ProposedEdits.Remove(edit);
                     _db.SaveChanges();
                     if (edit.IsDelete)
                     {
-                        return RedirectToAction("Edit", new { edit.Text, edit.IsAffirmative, edit.ArgumentId });
+                        Argument argument = PerformDelete(edit.ArgumentId);
+                        return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
                     }
                     else
                     {
-                        return RedirectToAction("Delete");
+                        PerformEdit(edit.Text, edit.IsAffirmative, edit.ArgumentId);
                     }
 
                 }
@@ -219,10 +237,10 @@ namespace DebatePlatform.Controllers
             else
             {
                 edit.Votes -= 1;
+                _db.Entry(edit).State = EntityState.Modified;
                 _db.EditVotes.Remove(existingVote);
             }
                         
-            _db.Entry(edit).State = EntityState.Modified;
             _db.SaveChanges();
             return RedirectToAction("Details", new { id = edit.ArgumentId });
         }

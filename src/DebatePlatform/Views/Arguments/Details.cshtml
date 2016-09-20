@@ -1,5 +1,5 @@
 ﻿@model DebatePlatform.Models.Argument
-
+@using DebatePlatform.Helpers
 @{
     ViewData["Title"] = Model.Text;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,7 +13,8 @@
 <ol>
     @foreach (var edit in Model.ProposedEdits)
     {
-        <li>@edit.Reason Votes: @edit.Votes </li>
-        @using (Html.BeginForm("CastEditVote", "Arguments", new { id = edit.Id })) { <button type="submit">I Agree</button> } 
+        <li>@CustomHelpers.DescribeEdit(edit)</li>
+        <label>Votes: @edit.Votes</label>
+        @using (Html.BeginForm("CastEditVote", "Arguments", new { id = edit.Id })) { <button type="submit">I Agree</button> }
     }
 </ol>

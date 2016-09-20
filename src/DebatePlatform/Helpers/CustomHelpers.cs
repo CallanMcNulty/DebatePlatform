@@ -22,7 +22,7 @@ namespace DebatePlatform.Helpers
                         "</div>"+
                         "<div class='argument-container'>"+
                             "<div id='"+child.ArgumentId+"' class='argument "+(child.IsAffirmative ? "aff" : "neg")+"'>"+
-                                "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 ? "" : "<form class='float-right' action='/Arguments/Vote/" + child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form>")+
+                                "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 ? "" : "<a class='vote-button float-right' id='vote"+child.ArgumentId+"'>I'm Convinced</a>")+
                                 "<div class='arg-text'>"+child.Text+"</div>"+
                                 (userType<1 ? "" : 
                                     "<a class='float-left' href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
@@ -51,6 +51,29 @@ namespace DebatePlatform.Helpers
         {
             int totalWidth = (int)(200F / argument.GetMinWidth(1F));
             return new HtmlString("<div style='min-width:"+totalWidth.ToString()+"px'>");
+        }
+
+        public static HtmlString DescribeEdit(ProposedEdit edit)
+        {
+            string result = "<p>";
+            if(edit.Text != null)
+            {
+                result += "<strong>Edit text to: </strong><br>" + edit.Text + "<br><br>";
+            }
+            if (edit.IsDelete)
+            {
+                result += "<strong>Delete Argument</strong><br><br>";
+            }
+            if (edit.ParentId != 0)
+            {
+                result += "<strong>Make this a response to Argument #" + edit.ParentId.ToString() + "<strong><br><br>";
+            }
+            if (result.Length < 4)
+            {
+                result += "<strong>Change to a "+(edit.IsAffirmative ? "supporting" : "opposing")+" argument</strong><br><br>";
+            }
+            result += "<strong>Because: </strong><br>" + edit.Reason + "</p>";
+            return new HtmlString(result);
         }
     }
 }

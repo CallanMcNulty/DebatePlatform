@@ -26,6 +26,7 @@
             @CustomHelpers.DisplayChildren(Model, ViewBag.UserType)
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript">
         var curYPos = 0,
         curXPos = 0,
@@ -39,6 +40,18 @@
 
         window.addEventListener('mousedown', function (e) { curDown = true; curYPos = e.pageY; curXPos = e.pageX; });
         window.addEventListener('mouseup', function (e) { curDown = false; });
+
+        $(".vote-button").click(function () {
+            var id = this.id.substring(4,this.id.length);
+            $.ajax({
+                url: '@Url.Action("Vote")',
+                type: "POST",
+                data: { id: parseInt(id)},
+                success: function (result) {
+                    $("#"+id+" p").text(result);
+                }
+            });
+        });
     </script>
 </body>
 </html>

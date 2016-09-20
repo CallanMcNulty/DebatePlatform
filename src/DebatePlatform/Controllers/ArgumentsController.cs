@@ -137,7 +137,7 @@ namespace DebatePlatform.Controllers
             }
             _db.Entry(argument).State = EntityState.Modified;
             _db.SaveChanges();
-            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
+            return Content(argument.Strength.ToString(), "text/plain");
         }
         [Authorize(Roles = "admin")]
         public IActionResult Edit(int id)

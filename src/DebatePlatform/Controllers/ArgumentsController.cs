@@ -27,11 +27,12 @@ namespace DebatePlatform.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await _userManager.FindByIdAsync(userId);
         }
-        private Argument PerformEdit(string text, bool affirmative, int id)
+        private Argument PerformEdit(string text, bool affirmative, int parentId, int id)
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
-            argument.Text = text;
+            argument.Text = text ?? argument.Text;
             argument.IsAffirmative = affirmative;
+            argument.ParentId = parentId==0 ? argument.ParentId : parentId;
             _db.Entry(argument).State = EntityState.Modified;
             _db.SaveChanges();
             return argument;
@@ -152,9 +153,9 @@ namespace DebatePlatform.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public IActionResult Edit(string text, string affirmative, int id)
+        public IActionResult Edit(string text, string affirmative, int parentId, int id)
         {
-            Argument argument = PerformEdit(text, bool.Parse(affirmative), id);
+            Argument argument = PerformEdit(text, bool.Parse(affirmative), parentId, id);
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId});
         }
         [HttpPost]
@@ -213,7 +214,7 @@ namespace DebatePlatform.Controllers
                 vote.UserId = current.Id;
                 _db.EditVotes.Add(vote);
                 _db.SaveChanges();
-                if (edit.Votes >= 5)
+                if (edit.Votes >= 2)
                 {
                     List<EditVote> votes = _db.EditVotes.Where(ev => ev.ProposedEditId == edit.Id).ToList();
                     foreach(EditVote v in votes)
@@ -229,7 +230,7 @@ namespace DebatePlatform.Controllers
                     }
                     else
                     {
-                        PerformEdit(edit.Text, edit.IsAffirmative, edit.ArgumentId);
+                        PerformEdit(edit.Text, edit.IsAffirmative, edit.ParentId, edit.ArgumentId);
                     }
 
                 }

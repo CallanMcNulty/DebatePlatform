@@ -44,6 +44,9 @@ textarea {
 li {
     margin-bottom: 10px;
 }
+.hidden {
+    display: none;
+}
 .white-page {
     background-color: white;
     padding: 20px;

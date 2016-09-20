@@ -6,33 +6,44 @@
 }
 
 <div class="white-page">
+    <div id="buttons">
+        <button id="edit-text-button">Edit Text</button>
+        <button id="edit-affirmative-button">Switch to @(Model.IsAffirmative ? "Opposition" : "Support")</button>
+        <button id="edit-deletion-button">Propose Deletion</button>
+        <button id="edit-reparent-button">Re-Parent</button>
+    </div>
     @using (Html.BeginForm())
     {
-        @Html.Hidden("id", Model.ArgumentId)
-        @if (Model.ParentId != 0)
-        {
-            <label>Delete this Argument?</label>
-            <input name="delete" type="checkbox" value="True">
+        <input id="delete" name="delete" type="hidden" value="False">
+        <input id ="affirmative" name="affirmative" type="hidden" value=""/>
+        <div id="edit-text" class="hidden">
+            <label>Your Argument</label><br />
+            <textarea id="text" name="text" maxlength="255"></textarea>
+        </div>
+        <br />
+        <br />
+        <div id="edit-form" class="hidden">
+            <label>Why are you proposing this edit?</label><br />
+            <textarea id="reason" name="reason" maxlength="255"></textarea>
             <br />
-            <br />
-            <label>Support</label>
-            <input name="affirmative" type="radio" value="True">
-            <label>&nbsp;&nbsp; Oppose</label>
-                <input name="affirmative" type="radio" value="False">
-                <br />
-                <br />
-        }
-        else
-        {
-            @Html.Hidden("affirmative", "True")
-        }
-        <label>Your Argument</label><br />
-        <textarea id="text" name="text" maxlength="255">@Model.Text</textarea>
-        <br />
-        <br />
-        <label>Why are you proposing this edit?</label><br />
-        <textarea id="reason" name="reason" maxlength="255"></textarea>
-        <br />
-        <button type="submit">Save</button>
+            <button type="submit">Save</button>
+        </div>
     }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $("#buttons").click(function () {
+            $("#edit-form").removeClass("hidden");
+            $("#buttons").addClass("hidden");
+        });
+        $("#edit-text-button").click(function () {
+            $("#edit-text").removeClass("hidden");
+            $("#edit-text textarea").text("@Model.Text");
+        });
+        $("#edit-affirmative-button").click(function () {
+            $("#affirmative").val( "@(!Model.IsAffirmative)" );
+        });
+        $("#edit-deletion-button").click(function () {
+            $("#delete").val("True");
+        });
+    </script>
 </div>

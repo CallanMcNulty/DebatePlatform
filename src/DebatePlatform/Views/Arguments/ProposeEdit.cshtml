@@ -1,5 +1,5 @@
 ﻿@model DebatePlatform.Models.Argument
-
+@using DebatePlatform.Helpers
 @{
     ViewData["Title"] = "Debatrix - Edit Argument";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,30 +20,52 @@
             <label>Your Argument</label><br />
             <textarea id="text" name="text" maxlength="255"></textarea>
         </div>
-        <br />
-        <br />
-        <div id="edit-form" class="hidden">
+        <div id="argument-tree" class="hidden" style="overflow:scroll;">
+            <div style="text-align:left; min-width:@( (int)(200F / ViewBag.Root.GetMinWidth(1F)) )px">
+                <div id="@ViewBag.Root.ArgumentId" class="argument">
+                    <h4>Score: @ViewBag.Root.GetTotalStrength()</h4>
+                    <h2 class="arg-text">@ViewBag.Root.Text</h2>
+                </div>
+                @CustomHelpers.DisplayChildren(ViewBag.Root, -1)
+            </div>
+        </div>
+        <div id="edit-reason" class="hidden">
+            <br />
+            <br />
+            <div id="parentId-container" class="hidden">
+                <label>Parent Id</label>
+                <input id="parentId" name="parentId" type="number" value="0" />
+                <br />
+                <br />
+            </div>
             <label>Why are you proposing this edit?</label><br />
             <textarea id="reason" name="reason" maxlength="255"></textarea>
             <br />
             <button type="submit">Save</button>
         </div>
     }
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        $("#buttons").click(function () {
-            $("#edit-form").removeClass("hidden");
-            $("#buttons").addClass("hidden");
-        });
-        $("#edit-text-button").click(function () {
-            $("#edit-text").removeClass("hidden");
-            $("#edit-text textarea").text("@Model.Text");
-        });
-        $("#edit-affirmative-button").click(function () {
-            $("#affirmative").val( "@(!Model.IsAffirmative)" );
-        });
-        $("#edit-deletion-button").click(function () {
-            $("#delete").val("True");
-        });
-    </script>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#buttons").click(function () {
+        $("#edit-reason").removeClass("hidden");
+        $("#buttons").addClass("hidden");
+    });
+    $("#edit-text-button").click(function () {
+        $("#edit-text").removeClass("hidden");
+        $("#edit-text textarea").text("@Model.Text");
+    });
+    $("#edit-affirmative-button").click(function () {
+        $("#affirmative").val( "@(!Model.IsAffirmative)" );
+    });
+    $("#edit-deletion-button").click(function () {
+        $("#delete").val("True");
+    });
+    $("#edit-reparent-button").click(function () {
+        $("#argument-tree").removeClass("hidden");
+        $("#parentId-container").removeClass("hidden");
+    });
+    $(".argument").click(function () {
+        $("#parentId").val(this.id);
+    })
+</script>

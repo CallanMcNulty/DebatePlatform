@@ -76,7 +76,7 @@ li {
 #argument-list h2 {
     margin-top: 0px;
 }
-.white-page form {
+.white-page form, #edit-reason {
     text-align: center;
 }
 .outer-container {

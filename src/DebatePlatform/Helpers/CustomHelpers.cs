@@ -21,16 +21,18 @@ namespace DebatePlatform.Helpers
                             "<div class='connector'></div>"+
                         "</div>"+
                         "<div class='argument-container'>"+
-                            "<div class='argument "+(child.IsAffirmative ? "aff" : "neg")+"'>"+
-                                "<p>"+child.GetTotalStrength().ToString()+"</p><form class='float-right' action='/Arguments/Vote/" + child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form>"+
+                            "<div id='"+child.ArgumentId+"' class='argument "+(child.IsAffirmative ? "aff" : "neg")+"'>"+
+                                "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 ? "" : "<form class='float-right' action='/Arguments/Vote/" + child.ArgumentId.ToString()+"' method='post'><button>I'm Convinced</button></form>")+
                                 "<div class='arg-text'>"+child.Text+"</div>"+
-                                (userType==0 ? "" : 
+                                (userType<1 ? "" : 
                                     "<a class='float-left' href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
                                     (userType==1 ? "" :
                                         "<a class='float-right' href='/Arguments/Edit/" + child.ArgumentId.ToString() + "'>Edit</a>"
                                     )
                                 )+
-                                "<a class='float-right' href='/Arguments/Details/"+child.ArgumentId.ToString()+"'>View</a>"+
+                                (userType<0 ? "" :
+                                    "<a class='float-right' href='/Arguments/Details/"+child.ArgumentId.ToString()+"'>View</a>"
+                                )+
                             "</div>"+
                         "</div>"+
                         DisplayChildrenRecursion(child, userType)+

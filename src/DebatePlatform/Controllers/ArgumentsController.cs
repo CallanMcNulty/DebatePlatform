@@ -176,11 +176,14 @@ namespace DebatePlatform.Controllers
         public IActionResult ProposeEdit(int id)
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            Argument root = argument.GetRoot();
+            root.AddChildrenRecursive();
+            ViewBag.Root = root;
             return View(argument);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProposeEdit(string text, string affirmative, string reason, int id, string delete)
+        public async Task<IActionResult> ProposeEdit(string text, string affirmative, string reason, int parentId, int id, string delete)
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             ProposedEdit edit = new ProposedEdit();
@@ -192,7 +195,7 @@ namespace DebatePlatform.Controllers
             ApplicationUser current = await GetCurrentUser();
             edit.UserId = current.Id;
             edit.Votes = 1;
-            edit.ParentId = argument.ParentId; //for now
+            edit.ParentId = parentId;
             _db.ProposedEdits.Add(edit);
             _db.SaveChanges();
             return RedirectToAction("Details", new { id = edit.ArgumentId });

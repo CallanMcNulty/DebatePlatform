@@ -18,7 +18,8 @@
     "Microsoft.NETCore.App": {
       "version": "1.0.0",
       "type": "platform"
-    }
+    },
+    "RestSharp.NetCore": "105.2.3"
   },
 
   "tools": {

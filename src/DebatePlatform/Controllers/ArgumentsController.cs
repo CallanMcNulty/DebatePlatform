@@ -137,7 +137,16 @@ namespace DebatePlatform.Controllers
             }
             _db.Entry(argument).State = EntityState.Modified;
             _db.SaveChanges();
-            return Content(argument.Strength.ToString(), "text/plain");
+            string response = "{";
+            while (argument.ParentId != 0)
+            {
+                argument.AddChildrenRecursive();
+                response += "\""+argument.ArgumentId.ToString() +"\": "+ argument.GetTotalStrength().ToString()+",";
+                argument = argument.AddParent();
+            }
+            argument.AddChildrenRecursive();
+            response += "\"" + argument.ArgumentId.ToString() + "\": " + argument.GetTotalStrength().ToString() + "}";
+            return Content(response, "text/plain");
         }
         [Authorize(Roles = "admin")]
         public IActionResult Edit(int id)

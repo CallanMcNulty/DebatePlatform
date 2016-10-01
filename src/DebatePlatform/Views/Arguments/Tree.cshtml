@@ -17,7 +17,7 @@
         <br />
 
         @CustomHelpers.BeginTreeContainer(Model)
-            <div class="argument">
+            <div class="argument" id="@Model.ArgumentId">
                 <h4>Score: @Model.GetTotalStrength()</h4>
                 <h2 class="arg-text">@Model.Text</h2>
                 <a class="float-left" href="/Arguments/Create/@Model.ArgumentId">Respond</a>
@@ -48,7 +48,13 @@
                 type: "POST",
                 data: { id: parseInt(id)},
                 success: function (result) {
-                    $("#"+id+" p").text(result);
+                    console.log(result);
+                    resultJson = JSON.parse(result);
+                    var keys = Object.keys(resultJson);
+                    for (var i = 0; i < keys.length; i++) {
+                        $("#" + keys[i] + " p").text(resultJson[keys[i]]);
+                        $("#" + keys[i] + " h4").text("Score: "+resultJson[keys[i]]);
+                    }
                 }
             });
         });

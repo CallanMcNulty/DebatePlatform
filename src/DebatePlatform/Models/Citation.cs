@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DebatePlatform.Models
@@ -16,6 +17,7 @@ namespace DebatePlatform.Models
         [Key]
         public int CitationId { get; set; }
         public int ArgumentId { get; set; }
+        public string UserId { get; set; }
 
         public string Creator { get; set; }
         public string Title { get; set; }
@@ -24,6 +26,8 @@ namespace DebatePlatform.Models
         public string Date { get; set; }
         public string Institution { get; set; }
         public string Description { get; set; }
+
+        public string Text { get; set; }
 
         public static Task<IRestResponse> GetResponseContentAsync(RestClient theClient, RestRequest theRequest)
         {
@@ -47,26 +51,26 @@ namespace DebatePlatform.Models
             List<Citation> result = new List<Citation>() { };
             for(var i=0; i<10; i++)
             {
+                Regex rgx = new Regex("[\"{}()\\]\\[]");
                 var doc = jsonResponse["docs"][i];
                 Citation newCite = new Citation();
                 var temp = doc["isShownAt"];
-                newCite.URL = temp == null ? null : temp.ToString();
+                newCite.URL = temp == null ? null : rgx.Replace(temp.ToString(), "");
                 temp = doc["sourceResource"]["title"];
-                newCite.Title = temp == null ? null : temp.ToString();
+                newCite.Title = temp == null ? null : rgx.Replace(temp.ToString(), "");
                 temp = doc["dataProvider"];
-                newCite.Institution = temp == null ? null : temp.ToString();
+                newCite.Institution = temp == null ? null : rgx.Replace(temp.ToString(), "");
                 temp = doc["sourceResource"]["description"];
-                newCite.Description = temp == null ? null : temp.ToString();
+                newCite.Description = temp == null ? null : rgx.Replace(temp.ToString(), "");
                 temp = doc["sourceResource"]["creator"];
-                newCite.Creator = temp == null ? null : temp.ToString();
+                newCite.Creator = temp == null ? null : rgx.Replace(temp.ToString(), "");
                 temp = doc["sourceResource"]["date"];
-                newCite.Date = temp == null ? null : temp.ToString();
+                newCite.Date = temp == null ? null : rgx.Replace(temp.ToString(), "");
                 temp = doc["sourceResource"]["format"];
-                newCite.Format = temp == null ? null : temp.ToString();
+                newCite.Format = temp == null ? null : rgx.Replace(temp.ToString(), "");
 
                 result.Add(newCite);
             }
-            //var messageList = JsonConvert.DeserializeObject<List<Message>>(jsonResponse["messages"].ToString());
             return result;
         }
     }

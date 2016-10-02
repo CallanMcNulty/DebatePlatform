@@ -257,5 +257,16 @@ namespace DebatePlatform.Controllers
             _db.SaveChanges();
             return RedirectToAction("Details", new { id = edit.ArgumentId });
         }
+
+        public IActionResult Cite(int id)
+        {
+            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            return View(argument);
+        }
+
+        public IActionResult SearchDPLA(string term, int page)
+        {
+            return Json( Citation.SearchPage(term, page) );
+        }
     }
 }

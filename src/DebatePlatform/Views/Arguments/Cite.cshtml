@@ -1,0 +1,92 @@
+﻿@model DebatePlatform.Models.Argument
+
+@{
+    ViewData["Title"] = "Debatrix - Edit Argument";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="white-page">
+    <div id="buttons">
+        <button id="DPLA-button">Search DPLA</button>
+        <button id="create-button">Custom Citation</button>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <div id="citation-fields" class="hidden">
+            <label>Format</label>
+            <input name="format" type="text" />
+            <label>Title</label>
+            <input name="title" type="text" />
+            <label>Description</label>
+            <input name="description" type="text" />
+            <label>Creator</label>
+            <input name="creator" type="text" />
+            <label>Institution</label>
+            <input name="institution" type="text" />
+            <label>Date</label>
+            <input name="date" type="text" />
+            <label>URL</label>
+            <input name="url" type="text" />
+        </div>
+        <div id="citation-search" class="hidden">
+            <label>Search Term</label>
+            <input id="term" type="text" />
+            <input id="page" type="number" class="hidden" value="0"/>
+            <button type="button" id="search-button">Search</button>
+        </div>
+        <div id="search-results"></div>
+
+        <div id="edit-reason" class="hidden">
+            <label>Explain this citation:</label><br />
+            <textarea id="reason" name="reason" maxlength="255"></textarea>
+            <br />
+            <button type="submit">Save</button>
+        </div>
+    }
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#buttons").click(function () {
+        $("#buttons").addClass("hidden");
+        $("#edit-reason").removeClass("hidden");
+    });
+    $("#create-button").click(function () {
+        $("#citation-fields").removeClass("hidden");
+    });
+    $("#DPLA-button").click(function () {
+        $("#citation-search").removeClass("hidden");
+    });
+
+    var skipNulls = function (json, key) {
+        return json[key] == null ? "No "+key : json[key];
+    }
+    $("#search-button").click(function () {
+        var term = $("#term").val();
+        var page = $("#page").val();
+        $.ajax({
+            url: '@Url.Action("SearchDPLA")',
+            type: "GET",
+            data: { term: term, page: page },
+            success: function (result) {
+                console.log(result);
+                $("#search-results").empty();
+                for (var i = 0; i < result.length; i++) {
+                    $("#search-results").append(
+                        "<div class='citation-search'>" +
+                            "<p>" + skipNulls(result[i],"format") + "</p>" +
+                            "<h4>" + skipNulls(result[i],"title") + "</h4>" +
+                            "<h5>" + skipNulls(result[i],"creator") + " - " + skipNulls(result[i],"institution") + " - " + skipNulls(result[i],"date") + "</h5>" +
+                            "<p>" + skipNulls(result[i],"description") + "</p>" +
+                            "<a href='" + skipNulls(result[i], "URL") + "'> - View Here - </a>" +
+                            "<br><button id='"+i+"' class='select-citation'>Select</button>"+
+                        "</div>"
+                    );
+                }
+                $(".select-citation").click(function () {
+                    var doc = results[this.id];
+                    //make post request
+                });
+            }
+        });
+    });
+</script>

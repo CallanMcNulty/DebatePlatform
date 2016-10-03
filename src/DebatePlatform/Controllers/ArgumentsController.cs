@@ -73,6 +73,7 @@ namespace DebatePlatform.Controllers
             thisArgument.AddChildrenRecursive();
             thisArgument.AddParent();
             ViewBag.UserType = 0;
+            ViewBag.Citation = _db.Citations.FirstOrDefault(c => c.ArgumentId == id);
             if (User.IsInRole("user"))
             {
                 ViewBag.UserType = 1;
@@ -287,7 +288,7 @@ namespace DebatePlatform.Controllers
             citationArgument.isCitation = true;
             citationArgument.IsAffirmative = true;
             citationArgument.Strength = 1;
-            citationArgument.Text = "Citation: ";
+            citationArgument.Text = text;
             ApplicationUser user = await GetCurrentUser();
             citationArgument.UserId = user.Id;
             _db.Arguments.Add(citationArgument);

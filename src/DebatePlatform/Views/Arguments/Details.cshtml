@@ -1,6 +1,5 @@
 ﻿@model DebatePlatform.Models.Argument
 @using DebatePlatform.Helpers
-@using DebatePlatform.Models
 @{
     ViewData["Title"] = Model.Text;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,6 +7,18 @@
 
 <h2>@Model.Text</h2>
 <h4>@Model.Strength</h4>
+@if (Model.IsCitation)
+{
+    @if(ViewBag.Citation.URL != null) {<a href="@ViewBag.Citation.URL"><h3>@(ViewBag.Citation.Title ?? "View Source")</h3></a> }
+    else { <h3>@(ViewBag.Citation.Title ?? "View Source")</h3> }
+    <ul>
+        @if (ViewBag.Citation.Format != null) {<li>Format: @ViewBag.Citation.Format</li>}
+        @if (ViewBag.Citation.Creator != null) {<li>Creator: @ViewBag.Citation.Creator</li>}
+        @if (ViewBag.Citation.Date != null) {<li>Date: @ViewBag.Citation.Date</li>}
+        @if (ViewBag.Citation.Institution != null) {<li>Institution: @ViewBag.Citation.Institution</li>}
+    </ul>
+    <p>@ViewBag.Citation.Description</p>
+}
 <hr />
 
 <h4>Proposed Edits: @Html.ActionLink("+ Propose your own", "ProposeEdit", "Arguments", new { id = Model.ArgumentId})</h4>

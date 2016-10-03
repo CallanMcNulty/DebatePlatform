@@ -81,7 +81,7 @@ namespace DebatePlatform.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<bool>("isCitation");
+                    b.Property<bool>("IsCitation");
 
                     b.HasKey("ArgumentId");
 

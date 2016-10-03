@@ -31,7 +31,10 @@ namespace DebatePlatform.Controllers
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             argument.Text = text ?? argument.Text;
-            argument.IsAffirmative = affirmative;
+            if (!argument.IsCitation)
+            {
+                argument.IsAffirmative = affirmative;
+            }
             argument.ParentId = parentId==0 ? argument.ParentId : parentId;
             _db.Entry(argument).State = EntityState.Modified;
             _db.SaveChanges();
@@ -48,6 +51,11 @@ namespace DebatePlatform.Controllers
                 foreach (Vote vote in argument.Votes)
                 {
                     _db.Votes.Remove(vote);
+                }
+                if (argument.IsCitation)
+                {
+                    Citation cite = _db.Citations.FirstOrDefault(c => c.ArgumentId == argument.ArgumentId);
+                    _db.Citations.Remove(cite);
                 }
                 _db.Arguments.Remove(argument);
                 _db.SaveChanges();
@@ -180,6 +188,7 @@ namespace DebatePlatform.Controllers
             Argument argument = _db.Arguments
                 .Include(a => a.ProposedEdits)
                 .FirstOrDefault(a => a.ArgumentId == id);
+            ViewBag.Citation = _db.Citations.FirstOrDefault(c => c.ArgumentId == id);
             return View(argument);
         }
         
@@ -272,6 +281,16 @@ namespace DebatePlatform.Controllers
         [HttpPost]
         public async Task<IActionResult> Cite(string creator, string title, string format, string url, string date, string institution, string description, string text, int argumentId)
         {
+            Argument citationArgument = new Argument();
+            citationArgument.ParentId = argumentId;
+            citationArgument.IsCitation = true;
+            citationArgument.IsAffirmative = true;
+            citationArgument.Strength = 1;
+            citationArgument.Text = text;
+            ApplicationUser user = await GetCurrentUser();
+            citationArgument.UserId = user.Id;
+            _db.Arguments.Add(citationArgument);
+            _db.SaveChanges();
             Citation newCite = new Citation();
             newCite.Creator = creator;
             newCite.Title = title;
@@ -281,17 +300,8 @@ namespace DebatePlatform.Controllers
             newCite.Institution = institution;
             newCite.Description = description;
             newCite.Text = text;
-            newCite.ArgumentId = argumentId;
+            newCite.ArgumentId = citationArgument.ArgumentId;
             _db.Citations.Add(newCite);
-            Argument citationArgument = new Argument();
-            citationArgument.ParentId = argumentId;
-            citationArgument.isCitation = true;
-            citationArgument.IsAffirmative = true;
-            citationArgument.Strength = 1;
-            citationArgument.Text = text;
-            ApplicationUser user = await GetCurrentUser();
-            citationArgument.UserId = user.Id;
-            _db.Arguments.Add(citationArgument);
             _db.SaveChanges();
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == argumentId);
             int rootId = argument.GetRoot().ArgumentId;

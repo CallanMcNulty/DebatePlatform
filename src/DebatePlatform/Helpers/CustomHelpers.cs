@@ -22,9 +22,9 @@ namespace DebatePlatform.Helpers
                             "<div class='connector'></div>"+
                         "</div>"+
                         "<div class='argument-container'>"+
-                            "<div id='"+child.ArgumentId+"' class='argument "+(child.isCitation ? "cite" : (child.IsAffirmative ? "aff" : "neg"))+"'>"+
+                            "<div id='"+child.ArgumentId+"' class='argument "+(child.IsCitation ? "cite" : (child.IsAffirmative ? "aff" : "neg"))+"'>"+
                                 "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 ? "" : "<a class='vote-button float-right' id='vote"+child.ArgumentId+"'>I'm Convinced</a>")+
-                                "<div class='arg-text'>"+(child.isCitation ? "<a href='"+citation.URL+"'><h5>"+citation.Title+"</h5></a>" : "")+child.Text+"</div>"+
+                                "<div class='arg-text'>"+(child.IsCitation ? "<strong>Citation: </strong>" : "")+child.Text+"</div>"+
                                 (userType<1 ? "" : 
                                     "<a class='float-left' href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
                                     (userType==1 ? "" :

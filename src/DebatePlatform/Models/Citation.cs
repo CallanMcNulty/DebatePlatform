@@ -17,7 +17,6 @@ namespace DebatePlatform.Models
         [Key]
         public int CitationId { get; set; }
         public int ArgumentId { get; set; }
-        public string UserId { get; set; }
 
         public string Creator { get; set; }
         public string Title { get; set; }
@@ -49,7 +48,8 @@ namespace DebatePlatform.Models
             }).Wait();
             JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content);
             List<Citation> result = new List<Citation>() { };
-            for(var i=0; i<10; i++)
+            var ct = Math.Min((int)jsonResponse["count"], 10);
+            for(var i=0; i<ct; i++)
             {
                 Regex rgx = new Regex("[\"{}()\\]\\[]");
                 var doc = jsonResponse["docs"][i];

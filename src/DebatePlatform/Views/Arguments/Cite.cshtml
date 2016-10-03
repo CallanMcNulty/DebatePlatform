@@ -14,31 +14,31 @@
     {
         <div id="citation-fields" class="hidden">
             <label>Format</label>
-            <input name="format" type="text" />
+            <input id="format" name="format" type="text" />
             <label>Title</label>
-            <input name="title" type="text" />
+            <input id="name" name="title" type="text" />
             <label>Description</label>
-            <input name="description" type="text" />
+            <input id="description" name="description" type="text" />
             <label>Creator</label>
-            <input name="creator" type="text" />
+            <input id="creator" name="creator" type="text" />
             <label>Institution</label>
-            <input name="institution" type="text" />
+            <input id="institution" name="institution" type="text" />
             <label>Date</label>
-            <input name="date" type="text" />
+            <input id="date" name="date" type="text" />
             <label>URL</label>
-            <input name="url" type="text" />
+            <input id="url" name="url" type="text" />
         </div>
         <div id="citation-search" class="hidden">
             <label>Search Term</label>
             <input id="term" type="text" />
-            <input id="page" type="number" class="hidden" value="0"/>
+            <input id="page" type="number" class="hidden" value="1"/>
             <button type="button" id="search-button">Search</button>
+            <div id="search-results"></div>
         </div>
-        <div id="search-results"></div>
 
         <div id="edit-reason" class="hidden">
             <label>Explain this citation:</label><br />
-            <textarea id="reason" name="reason" maxlength="255"></textarea>
+            <textarea id="text" name="text" maxlength="255"></textarea>
             <br />
             <button type="submit">Save</button>
         </div>
@@ -48,10 +48,10 @@
 <script type="text/javascript">
     $("#buttons").click(function () {
         $("#buttons").addClass("hidden");
-        $("#edit-reason").removeClass("hidden");
     });
     $("#create-button").click(function () {
         $("#citation-fields").removeClass("hidden");
+        $("#edit-reason").removeClass("hidden");
     });
     $("#DPLA-button").click(function () {
         $("#citation-search").removeClass("hidden");
@@ -60,9 +60,13 @@
     var skipNulls = function (json, key) {
         return json[key] == null ? "No "+key : json[key];
     }
-    $("#search-button").click(function () {
+    var turnPage = function (inc) {
         var term = $("#term").val();
-        var page = $("#page").val();
+        var page = parseInt($("#page").val()) + inc;
+        $("#page").val(page);
+        ajaxDPLA(term, page);
+    }
+    var ajaxDPLA = function(term, page) {
         $.ajax({
             url: '@Url.Action("SearchDPLA")',
             type: "GET",
@@ -70,6 +74,10 @@
             success: function (result) {
                 console.log(result);
                 $("#search-results").empty();
+                $("#search-results").append(
+                    (page == 1 ? "" : "<button id='prev-page-button'b type='button'>Previous</button>") +
+                    (result.length < 10 ? "" : "<button id='next-page-button' type='button'>Next</button>")
+                );
                 for (var i = 0; i < result.length; i++) {
                     $("#search-results").append(
                         "<div class='citation-search'>" +
@@ -78,15 +86,28 @@
                             "<h5>" + skipNulls(result[i],"creator") + " - " + skipNulls(result[i],"institution") + " - " + skipNulls(result[i],"date") + "</h5>" +
                             "<p>" + skipNulls(result[i],"description") + "</p>" +
                             "<a href='" + skipNulls(result[i], "URL") + "'> - View Here - </a>" +
-                            "<br><button id='"+i+"' class='select-citation'>Select</button>"+
+                            "<br><button id='"+i+"' class='select-citation' type='button'>Select</button>"+
                         "</div>"
                     );
                 }
+                $("#next-page-button").click(function () { turnPage(1) });
+                $("#prev-page-button").click(function () { turnPage(-1) });
                 $(".select-citation").click(function () {
-                    var doc = results[this.id];
-                    //make post request
+                    var doc = result[this.id];
+                    var keys = Object.keys(doc);
+                    for (var j = 0; j < keys.length; j++) {
+                        $("#" + keys[j]).val(doc[keys[j]]);
+                    }
+                    $("#citation-search").addClass("hidden");
+                    $("#edit-reason").removeClass("hidden");
                 });
             }
         });
+    }
+    $("#search-button").click(function () {
+        var term = $("#term").val();
+        $("#page").val(1);
+        ajaxDPLA(term, 1);
     });
+    
 </script>

@@ -112,6 +112,7 @@ namespace DebatePlatform.Models
         public bool IsAffirmative { get; set; }
         public string Text { get; set; }
         public int Strength { get; set; }
+        public bool isCitation { get; set; }
 
         public int ParentId { get; set; }
         public virtual Argument Parent { get; set; }

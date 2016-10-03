@@ -11,6 +11,7 @@ namespace DebatePlatform.Models
         public virtual DbSet<Vote> Votes { get; set; }
         public virtual DbSet<ProposedEdit> ProposedEdits { get; set; }
         public virtual DbSet<EditVote> EditVotes { get; set; }
+        public virtual DbSet<Citation> Citations { get; set; }
 
         protected override void OnModelCreating( ModelBuilder modelbuilder)
         {

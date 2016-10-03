@@ -40,7 +40,7 @@ namespace DebatePlatform.Models
         public static List<Citation> SearchPage(string subject, int page)
         {
             var client = new RestClient("http://api.dp.la/v2/");
-            var request = new RestRequest("items?q="+subject+"&page="+page.ToString()+"&api_key=e397af2521d5bcc456af094aaa42d525", Method.GET);
+            var request = new RestRequest("items?q="+subject+"&page="+page.ToString()+"&api_key="+EnvironmentVariables.DPLAKey, Method.GET);
             var response = new RestResponse();
             Task.Run(async () =>
             {

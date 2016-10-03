@@ -9,7 +9,7 @@
 <h2>@Model.Text</h2>
 <h4>@Model.Strength</h4>
 <hr />
-@Citation.SearchPage("Donald Trump", 1);
+
 <h4>Proposed Edits: @Html.ActionLink("+ Propose your own", "ProposeEdit", "Arguments", new { id = Model.ArgumentId})</h4>
 <ol>
     @foreach (var edit in Model.ProposedEdits)

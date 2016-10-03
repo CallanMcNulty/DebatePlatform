@@ -260,13 +260,41 @@ namespace DebatePlatform.Controllers
 
         public IActionResult Cite(int id)
         {
-            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
-            return View(argument);
+            return View(id);
         }
 
         public IActionResult SearchDPLA(string term, int page)
         {
             return Json( Citation.SearchPage(term, page) );
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Cite(string creator, string title, string format, string url, string date, string institution, string description, string text, int argumentId)
+        {
+            Citation newCite = new Citation();
+            newCite.Creator = creator;
+            newCite.Title = title;
+            newCite.Format = format;
+            newCite.URL = url;
+            newCite.Date = date;
+            newCite.Institution = institution;
+            newCite.Description = description;
+            newCite.Text = text;
+            newCite.ArgumentId = argumentId;
+            _db.Citations.Add(newCite);
+            Argument citationArgument = new Argument();
+            citationArgument.ParentId = argumentId;
+            citationArgument.isCitation = true;
+            citationArgument.IsAffirmative = true;
+            citationArgument.Strength = 1;
+            citationArgument.Text = "Citation: ";
+            ApplicationUser user = await GetCurrentUser();
+            citationArgument.UserId = user.Id;
+            _db.Arguments.Add(citationArgument);
+            _db.SaveChanges();
+            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == argumentId);
+            int rootId = argument.GetRoot().ArgumentId;
+            return RedirectToAction("Tree", new { id = rootId });
         }
     }
 }

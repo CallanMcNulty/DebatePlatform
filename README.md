@@ -11,6 +11,11 @@ This app will provide users with a purpose-built platform for debating online. I
 ## Setup/Installation Requirements
 
 * Clone repository from GitHub
+* To get your API key, make the following http post request inserting your email address where indicated (this can be done in your browser): http://api.dp.la/v2/api_key/YOUR_EMAIL@example.com
+* Check your email for your API key
+* Add a file names EnvironmentVariables.cs to the Models folder in the src directory
+* Add the following text to that file, inserting your API key where indicated: namespace DebatePlatform.Models { public class EnvironmentVariables { public static string DPLAKey = "YOUR_API_KEY"; } }
+* Navigate to cloned directory and run the command: dotnet ef database update
 * If Visual Studio is installed, open DebatePlatform.sln in Visual Studio
 * Click the green 'Run in IIS' button
 * If Visual Studio is not installed, IIS must be installed and configured according to your machine's needs

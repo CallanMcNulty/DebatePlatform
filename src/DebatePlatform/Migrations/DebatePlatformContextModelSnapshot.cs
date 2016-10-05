@@ -72,6 +72,8 @@ namespace DebatePlatform.Migrations
 
                     b.Property<bool>("IsAffirmative");
 
+                    b.Property<bool>("IsCitation");
+
                     b.Property<int>("ParentId");
 
                     b.Property<int>("Strength");
@@ -79,8 +81,6 @@ namespace DebatePlatform.Migrations
                     b.Property<string>("Text");
 
                     b.Property<string>("UserId");
-
-                    b.Property<bool>("IsCitation");
 
                     b.HasKey("ArgumentId");
 

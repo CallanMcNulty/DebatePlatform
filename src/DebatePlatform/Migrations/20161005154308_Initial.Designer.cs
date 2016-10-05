@@ -8,8 +8,8 @@ using DebatePlatform.Models;
 namespace DebatePlatform.Migrations
 {
     [DbContext(typeof(DebatePlatformContext))]
-    [Migration("20160916161957_votes")]
-    partial class votes
+    [Migration("20161005154308_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -73,6 +73,8 @@ namespace DebatePlatform.Migrations
 
                     b.Property<bool>("IsAffirmative");
 
+                    b.Property<bool>("IsCitation");
+
                     b.Property<int>("ParentId");
 
                     b.Property<int>("Strength");
@@ -88,6 +90,82 @@ namespace DebatePlatform.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Arguments");
+                });
+
+            modelBuilder.Entity("DebatePlatform.Models.Citation", b =>
+                {
+                    b.Property<int>("CitationId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ArgumentId");
+
+                    b.Property<string>("Creator");
+
+                    b.Property<string>("Date");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Format");
+
+                    b.Property<string>("Institution");
+
+                    b.Property<string>("Text");
+
+                    b.Property<string>("Title");
+
+                    b.Property<string>("URL");
+
+                    b.HasKey("CitationId");
+
+                    b.ToTable("Citations");
+                });
+
+            modelBuilder.Entity("DebatePlatform.Models.EditVote", b =>
+                {
+                    b.Property<int>("EditVoteId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ProposedEditId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("EditVoteId");
+
+                    b.HasIndex("ProposedEditId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EditVotes");
+                });
+
+            modelBuilder.Entity("DebatePlatform.Models.ProposedEdit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ArgumentId");
+
+                    b.Property<bool>("IsAffirmative");
+
+                    b.Property<bool>("IsDelete");
+
+                    b.Property<int>("ParentId");
+
+                    b.Property<string>("Reason");
+
+                    b.Property<string>("Text");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<int>("Votes");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArgumentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProposedEdits");
                 });
 
             modelBuilder.Entity("DebatePlatform.Models.Vote", b =>
@@ -226,10 +304,32 @@ namespace DebatePlatform.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("DebatePlatform.Models.EditVote", b =>
+                {
+                    b.HasOne("DebatePlatform.Models.ProposedEdit", "ProposedEdit")
+                        .WithMany()
+                        .HasForeignKey("ProposedEditId");
+
+                    b.HasOne("DebatePlatform.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("DebatePlatform.Models.ProposedEdit", b =>
+                {
+                    b.HasOne("DebatePlatform.Models.Argument", "Argument")
+                        .WithMany("ProposedEdits")
+                        .HasForeignKey("ArgumentId");
+
+                    b.HasOne("DebatePlatform.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("DebatePlatform.Models.Vote", b =>
                 {
                     b.HasOne("DebatePlatform.Models.Argument", "Argument")
-                        .WithMany()
+                        .WithMany("Votes")
                         .HasForeignKey("ArgumentId");
 
                     b.HasOne("DebatePlatform.Models.ApplicationUser", "User")

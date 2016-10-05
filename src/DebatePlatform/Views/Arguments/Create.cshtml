@@ -8,11 +8,11 @@
 <p>@Model.Text</p>
 <hr />
 <div class="white-page">
-    <div id="buttons">
+    <div id="buttons" class="@(Model.ArgumentId == 0 ? "hidden" : "")">
         <button id="create-button">New Argument</button>
         <button id="citation-button">New Citation</button>
     </div>
-    <div id="new-argument-form" class="hidden">
+    <div id="new-argument-form" class="@(Model.ArgumentId == 0 ? "" : "hidden")">
         @using (Html.BeginForm())
         {
             @Html.Hidden("p_id", Model.ArgumentId)

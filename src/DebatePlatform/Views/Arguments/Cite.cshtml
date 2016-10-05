@@ -13,20 +13,34 @@
     @using (Html.BeginForm())
     {
         <div id="citation-fields" class="hidden">
-            <label>Format</label>
+            <label>Format</label><br />
             <input id="format" name="format" type="text" />
-            <label>Title</label>
+            <br />
+            <br />
+            <label>Title</label><br />
             <input id="title" name="title" type="text" />
-            <label>Description</label>
+            <br />
+            <br />
+            <label>Description</label><br />
             <input id="description" name="description" type="text" />
-            <label>Creator</label>
+            <br />
+            <br />
+            <label>Creator</label><br />
             <input id="creator" name="creator" type="text" />
-            <label>Institution</label>
+            <br />
+            <br />
+            <label>Institution</label><br />
             <input id="institution" name="institution" type="text" />
-            <label>Date</label>
+            <br />
+            <br />
+            <label>Date</label><br />
             <input id="date" name="date" type="text" />
-            <label>URL</label>
+            <br />
+            <br />
+            <label>URL</label><br />
             <input id="url" name="url" type="text" />
+            <br />
+            <br />
         </div>
         <div id="citation-search" class="hidden">
             <label>Search Term</label>
@@ -47,6 +61,11 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script type="text/javascript">
+    $(document).keypress(function (event) {
+        if (event.which == '13') {
+            event.preventDefault();
+        }
+    });
     $("#buttons").click(function () {
         $("#buttons").addClass("hidden");
     });

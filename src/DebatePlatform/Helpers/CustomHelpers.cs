@@ -56,24 +56,32 @@ namespace DebatePlatform.Helpers
 
         public static HtmlString DescribeEdit(ProposedEdit edit)
         {
-            string result = "<p>";
+            string votes = "<span class='strength float-right'>Votes: " + edit.Votes.ToString() + "</span>";
+            string result = "<h4>";
             if(edit.Text != null)
             {
-                result += "<strong>Edit text to: </strong><br>" + edit.Text + "<br><br>";
+                result += "Edit text to: "+votes+"<h4><p>" + edit.Text + "</p>";
+                votes = "";
             }
             if (edit.IsDelete)
             {
-                result += "<strong>Delete Argument</strong><br><br>";
+                result += "Delete Argument" + votes + "</h4>";
+                votes = "";
             }
             if (edit.ParentId != 0)
             {
-                result += "<strong>Make this a response to Argument #" + edit.ParentId.ToString() + "<strong><br><br>";
+                result += "Make this a response to Argument #" + edit.ParentId.ToString() + votes + "</h4>";
+                votes = "";
             }
-            if (result.Length < 4)
+            if (result.Length < 5)
             {
-                result += "<strong>Change to a "+(edit.IsAffirmative ? "supporting" : "opposing")+" argument</strong><br><br>";
+                result += "Change to a "+(edit.IsAffirmative ? "supporting" : "opposing")+ " argument" + votes + "</h4>";
+                votes = "";
             }
-            result += "<strong>Because: </strong><br>" + edit.Reason + "</p>";
+            if(edit.Reason != null)
+            {
+                result += "<h4>Because: </h4><p>" + edit.Reason + "</p>";
+            }
             return new HtmlString(result);
         }
     }

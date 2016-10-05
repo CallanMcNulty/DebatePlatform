@@ -187,7 +187,10 @@ namespace DebatePlatform.Controllers
         {
             Argument argument = _db.Arguments
                 .Include(a => a.ProposedEdits)
+                    .ThenInclude(pe => pe.User)
+                .Include(a => a.User)
                 .FirstOrDefault(a => a.ArgumentId == id);
+            argument.AddChildrenRecursive();
             ViewBag.Citation = _db.Citations.FirstOrDefault(c => c.ArgumentId == id);
             return View(argument);
         }
@@ -195,6 +198,7 @@ namespace DebatePlatform.Controllers
         public IActionResult ProposeEdit(int id)
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            argument.AddChildrenRecursive();
             Argument root = argument.GetRoot();
             root.AddChildrenRecursive();
             ViewBag.Root = root;
@@ -267,6 +271,26 @@ namespace DebatePlatform.Controllers
             _db.SaveChanges();
             return RedirectToAction("Details", new { id = edit.ArgumentId });
         }
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public IActionResult ForceEdit(int id)
+        {
+            ProposedEdit edit = _db.ProposedEdits.FirstOrDefault(pe => pe.Id == id);
+            List<EditVote> votes = _db.EditVotes.Where(ev => ev.ProposedEditId == edit.Id).ToList();
+            foreach (EditVote v in votes)
+            {
+                _db.EditVotes.Remove(v);
+            }
+            _db.ProposedEdits.Remove(edit);
+            _db.SaveChanges();
+            if (edit.IsDelete)
+            {
+                Argument argument = PerformDelete(edit.ArgumentId);
+                return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
+            }
+            PerformEdit(edit.Text, edit.IsAffirmative, edit.ParentId, edit.ArgumentId);
+            return RedirectToAction("Details", new { id = edit.ArgumentId });
+        }
 
         public IActionResult Cite(int id)
         {
@@ -281,31 +305,35 @@ namespace DebatePlatform.Controllers
         [HttpPost]
         public async Task<IActionResult> Cite(string creator, string title, string format, string url, string date, string institution, string description, string text, int argumentId)
         {
-            Argument citationArgument = new Argument();
-            citationArgument.ParentId = argumentId;
-            citationArgument.IsCitation = true;
-            citationArgument.IsAffirmative = true;
-            citationArgument.Strength = 1;
-            citationArgument.Text = text;
-            ApplicationUser user = await GetCurrentUser();
-            citationArgument.UserId = user.Id;
-            _db.Arguments.Add(citationArgument);
-            _db.SaveChanges();
-            Citation newCite = new Citation();
-            newCite.Creator = creator;
-            newCite.Title = title;
-            newCite.Format = format;
-            newCite.URL = url;
-            newCite.Date = date;
-            newCite.Institution = institution;
-            newCite.Description = description;
-            newCite.Text = text;
-            newCite.ArgumentId = citationArgument.ArgumentId;
-            _db.Citations.Add(newCite);
-            _db.SaveChanges();
-            Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == argumentId);
-            int rootId = argument.GetRoot().ArgumentId;
-            return RedirectToAction("Tree", new { id = rootId });
+            if(argumentId != 0)
+            {
+                Argument citationArgument = new Argument();
+                citationArgument.ParentId = argumentId;
+                citationArgument.IsCitation = true;
+                citationArgument.IsAffirmative = true;
+                citationArgument.Strength = 1;
+                citationArgument.Text = text;
+                ApplicationUser user = await GetCurrentUser();
+                citationArgument.UserId = user.Id;
+                _db.Arguments.Add(citationArgument);
+                _db.SaveChanges();
+                Citation newCite = new Citation();
+                newCite.Creator = creator;
+                newCite.Title = title;
+                newCite.Format = format;
+                newCite.URL = url;
+                newCite.Date = date;
+                newCite.Institution = institution;
+                newCite.Description = description;
+                newCite.Text = text;
+                newCite.ArgumentId = citationArgument.ArgumentId;
+                _db.Citations.Add(newCite);
+                _db.SaveChanges();
+                Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == argumentId);
+                int rootId = argument.GetRoot().ArgumentId;
+                return RedirectToAction("Tree", new { id = rootId });
+            }
+            return View("Index");
         }
     }
 }

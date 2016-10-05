@@ -9,7 +9,7 @@
     <div id="buttons">
         <button id="edit-text-button">Edit Text</button>
         @if (!Model.IsCitation) { <button id="edit-affirmative-button">Switch to @(Model.IsAffirmative ? "Opposition" : "Support")</button> }
-        <button id="edit-deletion-button">Propose Deletion</button>
+        @if (Model.Children.Count == 0) {<button id="edit-deletion-button">Propose Deletion</button>}
         <button id="edit-reparent-button">Re-Parent</button>
     </div>
     @using (Html.BeginForm())

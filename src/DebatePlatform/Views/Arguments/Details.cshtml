@@ -5,28 +5,40 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Text</h2>
-<h4>@Model.Strength</h4>
+<p class="detail-header"><a class="float-left" href="/Arguments/Tree/@Model.GetRoot().ArgumentId"><strong>&#8678; Back</strong></a> <span>Argument Id#: @Model.ArgumentId</span> <span class="float-right strength"><strong>Strength: @Model.GetTotalStrength()</strong></span></p>
+<p>&nbsp; @Model.Text </p>
+<p class="detail-header">original author: @Model.User.UserName</p>
 @if (Model.IsCitation)
 {
-    @if(ViewBag.Citation.URL != null) {<a href="@ViewBag.Citation.URL"><h3>@(ViewBag.Citation.Title ?? "View Source")</h3></a> }
-    else { <h3>@(ViewBag.Citation.Title ?? "View Source")</h3> }
-    <ul>
-        @if (ViewBag.Citation.Format != null) {<li>Format: @ViewBag.Citation.Format</li>}
-        @if (ViewBag.Citation.Creator != null) {<li>Creator: @ViewBag.Citation.Creator</li>}
-        @if (ViewBag.Citation.Date != null) {<li>Date: @ViewBag.Citation.Date</li>}
-        @if (ViewBag.Citation.Institution != null) {<li>Institution: @ViewBag.Citation.Institution</li>}
-    </ul>
-    <p>@ViewBag.Citation.Description</p>
+    <hr />
+    <div class="white-page">
+        @if(ViewBag.Citation.URL != null) {<a href="@ViewBag.Citation.URL"><h3>@(ViewBag.Citation.Title ?? "View Source")</h3></a> }
+        else { <h3>@(ViewBag.Citation.Title ?? "View Source")</h3> }
+        <ul>
+            @if (ViewBag.Citation.Format != null) {<li>Format: @ViewBag.Citation.Format</li>}
+            @if (ViewBag.Citation.Creator != null) {<li>Creator: @ViewBag.Citation.Creator</li>}
+            @if (ViewBag.Citation.Date != null) {<li>Date: @ViewBag.Citation.Date</li>}
+            @if (ViewBag.Citation.Institution != null) {<li>Institution: @ViewBag.Citation.Institution</li>}
+        </ul>
+        <p>@ViewBag.Citation.Description</p>
+    </div>
 }
 <hr />
 
 <h4>Proposed Edits: @Html.ActionLink("+ Propose your own", "ProposeEdit", "Arguments", new { id = Model.ArgumentId})</h4>
-<ol>
-    @foreach (var edit in Model.ProposedEdits)
-    {
-        <li>@CustomHelpers.DescribeEdit(edit)</li>
-        <label>Votes: @edit.Votes</label>
-        @using (Html.BeginForm("CastEditVote", "Arguments", new { id = edit.Id })) { <button type="submit">I Agree</button> }
-    }
-</ol>
+@foreach (var edit in Model.ProposedEdits)
+{
+    <div class="proposed-edit">
+        <h4>@CustomHelpers.DescribeEdit(edit)</h4>
+        <p class="detail-header">proposed by @edit.User.UserName</p>
+        <div id="buttons">
+            @using (Html.BeginForm("CastEditVote", "Arguments", new { id = edit.Id }))
+            { <button type="submit">I Agree</button> }
+            @if (User.IsInRole("admin"))
+            {
+                @using (Html.BeginForm("ForceEdit", "Arguments", new { id = edit.Id }))
+                { <button type="submit">Force Edit</button> }
+            }
+        </div>
+    </div>
+}

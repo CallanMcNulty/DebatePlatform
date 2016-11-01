@@ -130,6 +130,10 @@ namespace DebatePlatform.Controllers
         {
             ApplicationUser current = await GetCurrentUser();
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
+            if (argument.LinkId != 0)
+            {
+                return Content("{}", "text/plain");
+            }
             Vote existingVote = _db.Votes.FirstOrDefault(v => v.UserId==current.Id && v.ArgumentId==argument.ArgumentId);
             if (existingVote==null)
             {
@@ -191,6 +195,7 @@ namespace DebatePlatform.Controllers
                 .Include(a => a.User)
                 .FirstOrDefault(a => a.ArgumentId == id);
             argument.AddChildrenRecursive();
+            argument.AddLink();
             ViewBag.Citation = _db.Citations.FirstOrDefault(c => c.ArgumentId == id);
             return View(argument);
         }
@@ -334,6 +339,27 @@ namespace DebatePlatform.Controllers
                 return RedirectToAction("Tree", new { id = rootId });
             }
             return View("Index");
+        }
+
+        public IActionResult Link(int id)
+        {
+            return View(id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Link(string text, string affirmative, int argumentId, int linkId)
+        {
+            Argument argument = new Argument();
+            argument.Text = text;
+            argument.IsAffirmative = bool.Parse(affirmative);
+            argument.Strength = 0;
+            argument.ParentId = argumentId;
+            argument.LinkId = linkId;
+            ApplicationUser user = await GetCurrentUser();
+            argument.UserId = user.Id;
+            _db.Arguments.Add(argument);
+            _db.SaveChanges();
+            return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
     }
 }

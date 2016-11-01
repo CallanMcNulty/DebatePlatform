@@ -21,16 +21,17 @@ namespace DebatePlatform.Models
             Children = db.Arguments
                 .Where(a => a.ParentId == ArgumentId)
                 .ToList();
-            foreach(Argument child in Children)
+            foreach (Argument child in Children)
             {
                 child.AddParent();
+                child.AddLink();
             }
             return Children.ToList();
         }
         public void AddChildrenRecursive()
         {
             AddChildren();
-            foreach(Argument child in Children)
+            foreach (Argument child in Children)
             {
                 child.AddChildrenRecursive();
             }
@@ -51,11 +52,26 @@ namespace DebatePlatform.Models
             db.SaveChanges();
         }
 
+        public Argument AddLink()
+        {
+            DebatePlatformContext db = new DebatePlatformContext();
+            Link = db.Arguments.FirstOrDefault(a => a.ArgumentId == LinkId);
+            if(Link != null)
+            {
+                Link.AddChildrenRecursive();
+            }
+            return Link;
+        }
+
         public int GetTotalStrength()
         {
-            if(Children.Count == 0)
+            if (LinkId != 0)
             {
-                if(IsAffirmative)
+                return Link.GetTotalStrength();
+            }
+            if (Children.Count == 0)
+            {
+                if (IsAffirmative)
                 {
                     return Strength;
                 }
@@ -67,16 +83,16 @@ namespace DebatePlatform.Models
             else
             {
                 int total = Strength;
-                foreach(Argument child in Children)
+                foreach (Argument child in Children)
                 {
                     total += child.GetTotalStrength();
                 }
                 total = IsAffirmative ? total : total * -1;
-                if(total < 0 && IsAffirmative && ParentId != 0)
+                if (total < 0 && IsAffirmative && ParentId != 0)
                 {
                     return 0;
                 }
-                else if(total > 0 && !IsAffirmative && ParentId != 0)
+                else if (total > 0 && !IsAffirmative && ParentId != 0)
                 {
                     return 0;
                 }
@@ -89,14 +105,14 @@ namespace DebatePlatform.Models
 
         public Argument GetRoot()
         {
-            if(ParentId == 0)
+            if (ParentId == 0)
             {
                 return this;
             }
             Parent = Parent ?? this.AddParent();
             return Parent.GetRoot();
         }
-        
+
         public float GetMinWidth(float width)
         {
             float childWidth = width / (float)Children.Count;
@@ -113,6 +129,10 @@ namespace DebatePlatform.Models
         public string Text { get; set; }
         public int Strength { get; set; }
         public bool IsCitation { get; set; }
+
+        public int LinkId { get; set; }
+        [NotMapped]
+        public virtual Argument Link { get; set; }
 
         public int ParentId { get; set; }
         public virtual Argument Parent { get; set; }

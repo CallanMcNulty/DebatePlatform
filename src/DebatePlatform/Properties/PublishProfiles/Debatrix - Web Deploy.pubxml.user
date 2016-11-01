@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAqYcxcukmIEuJ2RhHL3aATgAAAAACAAAAAAAQZgAAAAEAACAAAAD//vRyGmUUysnfAn8NwzIAzr+7p7mWe4Glsf+SjXAsPwAAAAAOgAAAAAIAACAAAAAvZxdNhWjf3XMMqPBL9ELSfCYqLlJ6DPuXt85UIbLahYAAAABKT5qYCnYCMYGAAVEO7ljxbVETWHs0Whs8iEgaD5nGhJBGkY//XxetYS7Gz0vhqA8IIuRQc96JMRMz+BsQG9eLLDGyxQ2/n/mnji7h0akDe3j9AD53rihVjLcvuS7nhltJEJ/auY1vNwo6IF6hPEoD5TVLyGK8LRrRTUhU7V1VB0AAAAAlI8pvUOw3NO8blfmw93kpGbMr3mqvSVGTkVGAS02lDJ2T6vVNXUFV28jHdAiKN8TNbNDIYgRz1k9Um+2/5LrH</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <EfMigrations Include="DebatePlatform.Models.DebatePlatformContext">
+      <Value>Server=tcp:debateplatform.database.windows.net,1433;Initial Catalog=DebatePlatform;Persist Security Info=False;User ID=callan;Password=Forty8800;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</Value>
+    </EfMigrations>
+  </ItemGroup>
+</Project>

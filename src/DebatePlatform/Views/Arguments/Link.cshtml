@@ -1,0 +1,27 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Debatrix - Edit Argument";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="white-page">
+    @using (Html.BeginForm())
+    {
+        <label>Support</label>
+        <input name="affirmative" type="radio" value="True" checked="checked">
+        <label>&nbsp;&nbsp; Oppose</label>
+        <input name="affirmative" type="radio" value="False">
+        <br />
+        <br />
+        <label>Enter Id# of argument to be linked:</label>
+        <input name="linkId" type="number" required/>
+        <br />
+        <br />
+        <input name="argumentId" type="number" class="hidden" value="@Model" />
+        <label>Explain this link:</label><br />
+        <textarea id="text" name="text" maxlength="255"></textarea>
+        <br />
+        <button type="submit">Save</button>
+    }
+</div>

@@ -11,6 +11,7 @@
     <div id="buttons" class="@(Model.ArgumentId == 0 ? "hidden" : "")">
         <button id="create-button">New Argument</button>
         <button id="citation-button">New Citation</button>
+        <button id="link-button">New Debate Link</button>
     </div>
     <div id="new-argument-form" class="@(Model.ArgumentId == 0 ? "" : "hidden")">
         @using (Html.BeginForm())
@@ -44,5 +45,8 @@
     });
     $("#citation-button").click(function () {
         location.href = "/Arguments/Cite/@Model.ArgumentId";
+    });
+    $("#link-button").click(function () {
+        location.href = "/Arguments/Link/@Model.ArgumentId";
     });
 </script>

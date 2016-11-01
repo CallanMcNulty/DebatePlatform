@@ -138,6 +138,11 @@ li {
     border-color: rebeccapurple;
     box-shadow: inset 0 0 10px rebeccapurple;
 }
+.link {
+    background-color: lightskyblue;
+    border-color: royalblue;
+    box-shadow: inset 0 0 10px royalblue;
+}
 .aff .arg-text {
     background-color: #d2ffca;
 }
@@ -146,6 +151,21 @@ li {
 }
 .cite .arg-text {
     background-color: #d2bcff;
+}
+.link .arg-text {
+    background-color: #c4e8ff;
+}
+.link .arg-text a {
+    background-color: inherit;
+    color: darkblue;
+    border-width: 0px;
+    box-shadow: none;
+    font-size: inherit;
+    padding: 0px;
+}
+.link .arg-text a:hover {
+    text-decoration: underline;
+    background-color: inherit;
 }
 .argument .arg-text {
     margin: 0px;
@@ -165,7 +185,6 @@ li {
     border-radius: 20px;
 }
 .argument a,.argument button {
-    background-color: none;
     border: 1px inset;
     text-decoration: none;
     color: black;

@@ -22,11 +22,11 @@ namespace DebatePlatform.Helpers
                             "<div class='connector'></div>"+
                         "</div>"+
                         "<div class='argument-container'>"+
-                            "<div id='"+child.ArgumentId+"' class='argument "+(child.IsCitation ? "cite" : (child.IsAffirmative ? "aff" : "neg"))+"'>"+
-                                "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 ? "" : "<a class='vote-button float-right' id='vote"+child.ArgumentId+"'>I'm Convinced</a>")+
-                                "<div class='arg-text'>"+(child.IsCitation ? "<strong>Citation: </strong>" : "")+child.Text+"</div>"+
+                            "<div id='"+child.ArgumentId+"' class='argument "+(child.LinkId!=0 ? "link" : (child.IsCitation ? "cite" : (child.IsAffirmative ? "aff" : "neg")))+"'>"+
+                                "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 || child.LinkId!=0 ? "" : "<a class='vote-button float-right' id='vote"+child.ArgumentId+"'>I'm Convinced</a>")+
+                                "<div class='arg-text'>"+(child.IsCitation ? "<strong>Citation: </strong>" : "")+(child.LinkId!=0 ? "<strong>Link: </strong><a href='/Arguments/Tree/"+child.LinkId+"'>" : "")+child.Text+(child.LinkId!=0 ? "</a>":"")+"</div>"+
                                 (userType<1 ? "" : 
-                                    "<a class='float-left' href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>"+
+                                    (child.LinkId != 0 ? "" : "<a class='float-left' href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>")+
                                     (userType==1 ? "" :
                                         "<a class='float-right' href='/Arguments/Edit/" + child.ArgumentId.ToString() + "'>Edit</a>"
                                     )

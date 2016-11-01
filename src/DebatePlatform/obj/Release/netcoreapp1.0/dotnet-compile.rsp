@@ -1,12 +1,12 @@
---temp-output:C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\obj\Debug\netcoreapp1.0\
---out:C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\bin\Debug\netcoreapp1.0\DebatePlatform.dll
---define:DEBUG
+--temp-output:C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\obj\Release\netcoreapp1.0\
+--out:C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\bin\Release\netcoreapp1.0\DebatePlatform.dll
+--define:RELEASE
 --define:TRACE
 --define:NETCOREAPP1_0
 --suppress-warning:CS1701
 --suppress-warning:CS1702
 --suppress-warning:CS1705
---optimize:False
+--optimize:True
 --emit-entry-point:True
 --output-name:DebatePlatform
 --file-version:1.0.0.0
@@ -207,18 +207,13 @@
 --reference:C:\Users\jabbe\.nuget\packages\System.Xml.ReaderWriter\4.0.11\ref\netstandard1.3\System.Xml.ReaderWriter.dll
 --reference:C:\Users\jabbe\.nuget\packages\System.Xml.XDocument\4.0.11\ref\netstandard1.3\System.Xml.XDocument.dll
 --reference:C:\Users\jabbe\.nuget\packages\System.Xml.XmlSerializer\4.0.11\ref\netstandard1.3\System.Xml.XmlSerializer.dll
---resource:"C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\obj\Debug\netcoreapp1.0\DebatePlatformdotnet-compile.deps.json",DebatePlatform.deps.json
+--resource:"C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\obj\Release\netcoreapp1.0\DebatePlatformdotnet-compile.deps.json",DebatePlatform.deps.json
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Program.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Startup.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Controllers\AccountsController.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Controllers\ArgumentsController.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Controllers\HomeController.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Helpers\CustomHelpers.cs
-C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Migrations\20161005154308_Initial.cs
-C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Migrations\20161005154308_Initial.Designer.cs
-C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Migrations\20161030002921_Linking.cs
-C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Migrations\20161030002921_Linking.Designer.cs
-C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Migrations\DebatePlatformContextModelSnapshot.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Models\ApplicationUser.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Models\Argument.cs
 C:\Users\jabbe\Documents\Visual Studio 2015\Projects\DebatePlatform\src\DebatePlatform\Models\Citation.cs

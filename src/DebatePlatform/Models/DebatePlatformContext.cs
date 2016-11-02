@@ -25,7 +25,7 @@ namespace DebatePlatform.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=DebatePlatform;integrated security=True");
+            options.UseSqlServer(@"Server=tcp:debateplatform.database.windows.net,1433;Initial Catalog=DebatePlatform;Persist Security Info=False;User ID=callan;Password={PASSWORD};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
         }
 
     }

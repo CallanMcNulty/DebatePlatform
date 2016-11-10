@@ -50,7 +50,7 @@ namespace DebatePlatform.Helpers
 
         public static HtmlString BeginTreeContainer(Argument argument)
         {
-            int totalWidth = (int)(200F / argument.GetMinWidth(1F));
+            int totalWidth = (int)(230F / argument.GetMinWidth(1F));
             return new HtmlString("<div style='min-width:"+totalWidth.ToString()+"px'>");
         }
 

@@ -46,6 +46,11 @@ namespace DebatePlatform.Controllers
                 .Include(a => a.Votes)
                 .FirstOrDefault(a => a.ArgumentId == id);
             argument.AddChildren();
+            List<Argument> linked = _db.Arguments.Where(a => a.LinkId == id).ToList();
+            foreach(Argument a in linked)
+            {
+                PerformDelete(a.ArgumentId);
+            }
             if (argument.Children.Count == 0)
             {
                 foreach (Vote vote in argument.Votes)
@@ -83,7 +88,14 @@ namespace DebatePlatform.Controllers
             ViewBag.UserType = 0;
             ViewBag.Citation = _db.Citations.FirstOrDefault(c => c.ArgumentId == id);
             ApplicationUser user = await GetCurrentUser();
-            ViewBag.UserVotes = _db.Votes.Where(v => v.UserId == user.Id).ToList();
+            if(user != null)
+            {
+                ViewBag.UserVotes = _db.Votes.Where(v => v.UserId == user.Id).ToList();
+            }
+            else
+            {
+                ViewBag.UserVotes = new List<Vote>();
+            }
             if (User.IsInRole("user"))
             {
                 ViewBag.UserType = 1;
@@ -191,6 +203,10 @@ namespace DebatePlatform.Controllers
         public IActionResult Delete(int id)
         {
             Argument argument = PerformDelete(id);
+            if(argument.ParentId == 0)
+            {
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });
         }
         public IActionResult Details(int id)
@@ -206,11 +222,20 @@ namespace DebatePlatform.Controllers
             return View(argument);
         }
         
-        public IActionResult ProposeEdit(int id)
+        public async Task<IActionResult> ProposeEdit(int id)
         {
             Argument argument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             argument.AddChildrenRecursive();
             Argument root = argument.GetRoot();
+            ApplicationUser user = await GetCurrentUser();
+            if (user != null)
+            {
+                ViewBag.UserVotes = _db.Votes.Where(v => v.UserId == user.Id).ToList();
+            }
+            else
+            {
+                ViewBag.UserVotes = new List<Vote>();
+            }
             root.AddChildrenRecursive();
             ViewBag.Root = root;
             return View(argument);
@@ -363,15 +388,16 @@ namespace DebatePlatform.Controllers
             argument.LinkId = linkId;
             ApplicationUser user = await GetCurrentUser();
             argument.UserId = user.Id;
-            /*Argument p = argument.AddParent();
-            while (p.ParentId != 0)
+            Argument p = argument.AddParent();
+            do
             {
-                if (p.ArgumentId == argument.ArgumentId)
+                if (p.ArgumentId == linkId)
                 {
                     return RedirectToAction("Link", new { id = argument.Parent.ArgumentId });
                 }
                 p = p.AddParent();
-            }*/
+            } while (p.ParentId != 0);
+            argument.Parent = null;
             _db.Arguments.Add(argument);
             _db.SaveChanges();
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });

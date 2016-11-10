@@ -26,7 +26,7 @@
                     <h4>Score: @ViewBag.Root.GetTotalStrength()</h4>
                     <h2 class="arg-text">@ViewBag.Root.Text</h2>
                 </div>
-                @CustomHelpers.DisplayChildren(ViewBag.Root, -1)
+                @CustomHelpers.DisplayChildren(ViewBag.Root, -1, ViewBag.UserVotes)
             </div>
         </div>
         <div id="edit-reason" class="hidden">

@@ -75,13 +75,15 @@ namespace DebatePlatform.Controllers
             return View(rootArguments);
         }
 
-        public IActionResult Tree(int id)
+        public async Task<IActionResult> Tree(int id)
         {
             Argument thisArgument = _db.Arguments.FirstOrDefault(a => a.ArgumentId == id);
             thisArgument.AddChildrenRecursive();
             thisArgument.AddParent();
             ViewBag.UserType = 0;
             ViewBag.Citation = _db.Citations.FirstOrDefault(c => c.ArgumentId == id);
+            ApplicationUser user = await GetCurrentUser();
+            ViewBag.UserVotes = _db.Votes.Where(v => v.UserId == user.Id).ToList();
             if (User.IsInRole("user"))
             {
                 ViewBag.UserType = 1;
@@ -116,6 +118,10 @@ namespace DebatePlatform.Controllers
             ApplicationUser user = await GetCurrentUser();
             argument.UserId = user.Id;
             _db.Arguments.Add(argument);
+            Vote vote = new Vote();
+            vote.UserId = user.Id;
+            vote.ArgumentId = argument.ArgumentId;
+            _db.Votes.Add(vote);
             _db.SaveChanges();
             if (argument.ParentId == 0)
             {
@@ -245,7 +251,7 @@ namespace DebatePlatform.Controllers
                 vote.UserId = current.Id;
                 _db.EditVotes.Add(vote);
                 _db.SaveChanges();
-                if (edit.Votes >= 2)
+                if (edit.Votes >= 5)
                 {
                     List<EditVote> votes = _db.EditVotes.Where(ev => ev.ProposedEditId == edit.Id).ToList();
                     foreach(EditVote v in votes)
@@ -357,6 +363,15 @@ namespace DebatePlatform.Controllers
             argument.LinkId = linkId;
             ApplicationUser user = await GetCurrentUser();
             argument.UserId = user.Id;
+            /*Argument p = argument.AddParent();
+            while (p.ParentId != 0)
+            {
+                if (p.ArgumentId == argument.ArgumentId)
+                {
+                    return RedirectToAction("Link", new { id = argument.Parent.ArgumentId });
+                }
+                p = p.AddParent();
+            }*/
             _db.Arguments.Add(argument);
             _db.SaveChanges();
             return RedirectToAction("Tree", new { id = argument.GetRoot().ArgumentId });

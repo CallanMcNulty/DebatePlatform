@@ -1,13 +1,13 @@
 ﻿using DebatePlatform.Models;
 using Microsoft.AspNetCore.Html;
-using System;
+using System.Collections.Generic;
 
 namespace DebatePlatform.Helpers
 {
     public class CustomHelpers
     {
 
-        public static string DisplayChildrenRecursion(Argument argument, int userType)
+        public static string DisplayChildrenRecursion(Argument argument, int userType, List<Vote> userVotes)
         {
             string htmlSoFar = "";
             if(argument.Children.Count > 0)
@@ -23,7 +23,7 @@ namespace DebatePlatform.Helpers
                         "</div>"+
                         "<div class='argument-container'>"+
                             "<div id='"+child.ArgumentId+"' class='argument "+(child.LinkId!=0 ? "link" : (child.IsCitation ? "cite" : (child.IsAffirmative ? "aff" : "neg")))+"'>"+
-                                "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 || child.LinkId!=0 ? "" : "<a class='vote-button float-right' id='vote"+child.ArgumentId+"'>I'm Convinced</a>")+
+                                "<p>"+child.GetTotalStrength().ToString()+ "</p>" + (userType < 1 || child.LinkId!=0 ? "" : "<a class='vote-button float-right' id='vote"+child.ArgumentId+"'>"+(userVotes.Exists(i => i.ArgumentId == child.ArgumentId) ? "I'm Not Convinced" : "I'm Convinced")+"</a>")+
                                 "<div class='arg-text'>"+(child.IsCitation ? "<strong>Citation: </strong>" : "")+(child.LinkId!=0 ? "<strong>Link: </strong><a href='/Arguments/Tree/"+child.LinkId+"'>" : "")+child.Text+(child.LinkId!=0 ? "</a>":"")+"</div>"+
                                 (userType<1 ? "" : 
                                     (child.LinkId != 0 ? "" : "<a class='float-left' href='/Arguments/Create/" + child.ArgumentId.ToString() + "'>Respond</a>")+
@@ -36,16 +36,16 @@ namespace DebatePlatform.Helpers
                                 )+
                             "</div>"+
                         "</div>"+
-                        DisplayChildrenRecursion(child, userType)+
+                        DisplayChildrenRecursion(child, userType, userVotes)+
                     "</div>";
                 }
                 htmlSoFar += "</div>";
             }
             return htmlSoFar;
         }
-        public static HtmlString DisplayChildren(Argument argument, int userType)
+        public static HtmlString DisplayChildren(Argument argument, int userType, List<Vote> userVotes)
         {
-            return new HtmlString(DisplayChildrenRecursion(argument, userType));
+            return new HtmlString(DisplayChildrenRecursion(argument, userType, userVotes));
         }
 
         public static HtmlString BeginTreeContainer(Argument argument)

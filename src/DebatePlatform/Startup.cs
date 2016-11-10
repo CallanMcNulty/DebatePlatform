@@ -20,16 +20,6 @@ namespace DebatePlatform
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json");
             Configuration = builder.Build();
-            DebatePlatformContext db = new DebatePlatformContext();
-            if (db.Roles.FirstOrDefault(r => r.Name == "admin") == null)
-            {
-                db.Roles.Add(new IdentityRole() { Name = "admin" });
-            }
-            if (db.Roles.FirstOrDefault(r => r.Name == "user") == null)
-            {
-                db.Roles.Add(new IdentityRole() { Name = "user" });
-            }
-            db.SaveChanges();
         }
         public void ConfigureServices(IServiceCollection services)
         {

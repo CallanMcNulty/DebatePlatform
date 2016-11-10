@@ -20,10 +20,14 @@
             <div class="argument" id="@Model.ArgumentId">
                 <h4>Score: @Model.GetTotalStrength()</h4>
                 <h2 class="arg-text">@Model.Text</h2>
-                <a class="float-left" href="/Arguments/Create/@Model.ArgumentId">Respond</a>
+                @if(ViewBag.UserType > 0)
+                {
+                    <a class="float-left" href="/Arguments/Create/@Model.ArgumentId">Respond</a>
+                }
+                <a class="float-right" href="/Arguments/Details/@Model.ArgumentId">View</a>
             </div>
 
-            @CustomHelpers.DisplayChildren(Model, ViewBag.UserType)
+            @CustomHelpers.DisplayChildren(Model, ViewBag.UserType, ViewBag.UserVotes)
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -42,7 +46,12 @@
         window.addEventListener('mouseup', function (e) { curDown = false; });
 
         $(".vote-button").click(function () {
-            var id = this.id.substring(4,this.id.length);
+            var id = this.id.substring(4, this.id.length);
+            if ($(this).text() == "I'm Convinced") {
+                $(this).text("I'm Not Convinced");
+            } else {
+                $(this).text("I'm Convinced");
+            }
             $.ajax({
                 url: '@Url.Action("Vote")',
                 type: "POST",

@@ -6,7 +6,9 @@
 }
 
 <p class="detail-header"><a class="float-left" href="/Arguments/Tree/@Model.GetRoot().ArgumentId"><strong>&#8678; Back</strong></a> <span>Argument Id#: @Model.ArgumentId</span> <span class="float-right strength"><strong>Strength: @Model.GetTotalStrength()</strong></span></p>
-<p>&nbsp; @Model.Text </p>
+<div class="white-page">
+    <p>&nbsp; @Model.Text </p>
+</div>
 <p class="detail-header">original author: @Model.User.UserName</p>
 @if (Model.IsCitation)
 {
